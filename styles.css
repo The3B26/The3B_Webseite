@@ -1,3 +1,4 @@
+/* Grundlegendes */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -6,12 +7,18 @@ body {
     overflow-x: hidden;
 }
 
+/* Wrapper auf Desktop-Größe */
+#wrapper {
+    width: 1920px;
+    transform-origin: top left;
+}
+
+/* Video-Hintergrund */
 .video-section {
     position: relative;
     height: 100vh;
     overflow: hidden;   
-
-}   
+}
 
 .background-video {
     width: 100%;
@@ -19,6 +26,7 @@ body {
     object-fit: cover;
 }
 
+/* Header */
 header {
     position: fixed;
     top: 0;
@@ -28,6 +36,7 @@ header {
     align-items: center;
     background-color: rgba(0, 0, 0, 0.534);
     padding: 20px 0;
+    z-index: 1000;
 }
 
 .header-left, .header-right {
@@ -55,28 +64,24 @@ nav ul {
     z-index: 100;
 }
 
-nav ul li {
-    position: relative;
-}
-
 nav ul li a {
     color: #FFD700;
     text-decoration: none;
     font-size: 30px;
     padding: 10px 20px;
-    position: relative;
     display: inline-block;
 }
 
-nav ul li a:hover{
+nav ul li a:hover {
     color: #fff;
     text-decoration: underline;
 }
 
+/* Produkte */
 #products {
     padding-top: 10vh;
+    background: url('images/Overview.JPG') no-repeat center center fixed;
     background-size: cover;
-    background: url('images/Overview.JPG') no-repeat center center fixed;       
 }
 
 .products-container {
@@ -91,7 +96,6 @@ nav ul li a:hover{
     background-color: rgba(28, 28, 28, 0.8);
     border-radius: 10px;
     padding: 20px;
-    /*padding-top: -150px;*/
     text-align: center;
     color: #fff;
     min-width: 500px;
@@ -116,6 +120,7 @@ figure dl dd {
     color: #fff;
 }
 
+/* Audio */
 #audio-section {
     padding: 50px;
     background-color: #000000c7;
@@ -136,6 +141,7 @@ figure dl dd {
     margin-bottom: 20px;
 }
 
+/* Canvas */
 #canvas-section {
     text-align: center;
     padding: 50px;
@@ -149,6 +155,7 @@ figure dl dd {
     background-color: #fff;
 }
 
+/* Footer */
 footer {
     position: fixed;
     bottom: 0;
@@ -159,13 +166,9 @@ footer {
     text-align: center;
 }
 
-#wrapper{
-    width: 1920px;
+/* Mobile Scaling */
+@media (max-width: 1920px) {
+    #wrapper {
+        transform: scale(calc(100vw / 1920));
+    }
 }
-
-#main-header{
-    width: 1920px;
-    height: 100px;
-
-}
-
