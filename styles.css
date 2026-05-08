@@ -1,0 +1,410 @@
+/* Grundlegendes */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #fff;
+    overflow-x: hidden;
+}
+
+/* Wrapper - jetzt flexibel statt fest 1920px */
+#wrapper {
+    width: 100%;
+    max-width: 1920px;
+    margin: 0 auto;
+}
+
+/* Fixiertes Hintergrund-Video */
+.bg-video-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -2;
+    overflow: hidden;
+}
+
+.background-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Dunkles Overlay über dem Video für bessere Lesbarkeit */
+.bg-video-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Header */
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.534);
+    padding: 10px 15px;
+    z-index: 1000;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.logo {
+    max-width: 110px;
+    height: auto;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+nav ul li a {
+    color: #FFD700;
+    text-decoration: none;
+    font-size: 22px;
+    padding: 8px 15px;
+    display: inline-block;
+}
+
+nav ul li a:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+/* Produkte */
+#products {
+    padding-top: 140px;
+    padding-bottom: 60px;
+    background: transparent;
+}
+
+.products-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+    justify-content: center;
+}
+
+.product {
+    flex: 1 1 calc(33.333% - 40px);
+    background-color: rgba(28, 28, 28, 0.8);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    color: #fff;
+    min-width: 300px;
+}
+
+/* Bild-Wrapper für Hover-Effekt */
+.image-wrapper {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    border-radius: 10px;
+    cursor: pointer;
+    max-width: 100%;
+}
+
+.product img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    border: 2px solid #FFD700;
+    display: block;
+    transition: transform 0.4s ease, filter 0.4s ease;
+}
+
+/* ===== MODERNES PREIS-OVERLAY (Glassmorphism) ===== */
+/* Schmales, semi-transparentes Panel, gleitet beim Hover von unten ins Bild */
+.price-overlay {
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    gap: 0;
+    padding: 10px 14px;
+    background: rgba(15, 15, 15, 0.55);
+    backdrop-filter: blur(12px) saturate(140%);
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+    border: 1px solid rgba(255, 215, 0, 0.35);
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+/* Variante für Items ohne Menü-Preis: schmaler, zentriert */
+.price-overlay--single {
+    left: auto;
+    right: 12px;
+    justify-content: flex-end;
+    padding: 8px 14px;
+}
+
+.price-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    line-height: 1.1;
+}
+
+.price-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgba(255, 215, 0, 0.75);
+    margin-bottom: 3px;
+}
+
+.price-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: #FFD700;
+    letter-spacing: 0.3px;
+}
+
+.price-divider {
+    width: 1px;
+    background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(255, 215, 0, 0.4) 50%,
+        transparent 100%
+    );
+    margin: 0 14px;
+    flex-shrink: 0;
+}
+
+/* Hover-Effekt: Bild dezent abdunkeln + Panel einblenden */
+.image-wrapper:hover img {
+    filter: brightness(0.75);
+    transform: scale(1.03);
+}
+
+.image-wrapper:hover .price-overlay {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+figure {
+    margin: 0;
+}
+
+figure dl {
+    margin: 10px 0 0 0;
+}
+
+figure dl dt {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #FFD700;
+}
+
+figure dl dd {
+    font-size: 20px;
+    line-height: 1.5;
+    color: #fff;
+    margin-left: 0;
+}
+
+/* Footer */
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #000;
+    color: #FFD700;
+    text-align: center;
+    padding: 8px 0;
+    z-index: 1000;
+}
+
+footer p {
+    margin: 0;
+    font-size: 14px;
+}
+
+/* ===== TABLET (max 900px) ===== */
+@media (max-width: 900px) {
+    .product {
+        flex: 1 1 calc(50% - 20px);
+        min-width: 250px;
+    }
+
+    nav ul li a {
+        font-size: 17px;
+        padding: 6px 10px;
+    }
+
+    .logo {
+        max-width: 75px;
+    }
+
+    figure dl dt {
+        font-size: 24px;
+    }
+
+    figure dl dd {
+        font-size: 17px;
+    }
+
+    .price-overlay {
+        padding: 8px 12px;
+    }
+
+    .price-value {
+        font-size: 17px;
+    }
+
+    .price-label {
+        font-size: 9px;
+        letter-spacing: 1.2px;
+    }
+
+    .price-divider {
+        margin: 0 10px;
+    }
+}
+
+/* ===== HANDY (max 600px) - Preis IMMER sichtbar als Badge ===== */
+@media (max-width: 600px) {
+    header {
+        padding: 10px;
+        gap: 5px;
+    }
+
+    .logo {
+        max-width: 55px;
+    }
+
+    nav ul {
+        gap: 5px;
+    }
+
+    nav ul li a {
+        font-size: 14px;
+        padding: 4px 8px;
+    }
+
+    #products {
+        padding-top: 120px;
+    }
+
+    .products-container {
+        gap: 15px;
+        padding: 15px;
+    }
+
+    .product {
+        flex: 1 1 100%;
+        min-width: 0;
+        padding: 15px;
+    }
+
+    figure dl dt {
+        font-size: 22px;
+    }
+
+    figure dl dd {
+        font-size: 16px;
+    }
+
+    /* Auf Handys: Panel dauerhaft sichtbar (kein Hover möglich) */
+    .price-overlay {
+        opacity: 1;
+        transform: none;
+        left: 8px;
+        right: 8px;
+        bottom: 8px;
+        padding: 7px 10px;
+        background: rgba(15, 15, 15, 0.7);
+    }
+
+    .price-overlay--single {
+        left: auto;
+        right: 8px;
+    }
+
+    .price-value {
+        font-size: 15px;
+    }
+
+    .price-label {
+        font-size: 8px;
+        letter-spacing: 1px;
+        margin-bottom: 2px;
+    }
+
+    .price-divider {
+        margin: 0 8px;
+    }
+
+    /* Hover-Effekte auf Touch-Geräten deaktivieren */
+    .image-wrapper:hover img {
+        filter: none;
+        transform: none;
+    }
+}
+
+/* ===== KLEINES HANDY (max 380px) ===== */
+@media (max-width: 380px) {
+    .logo {
+        max-width: 42px;
+    }
+
+    nav ul li a {
+        font-size: 12px;
+        padding: 4px 6px;
+    }
+
+    figure dl dt {
+        font-size: 20px;
+    }
+
+    figure dl dd {
+        font-size: 15px;
+    }
+
+    .price-value {
+        font-size: 13px;
+    }
+
+    .price-label {
+        font-size: 8px;
+    }
+
+    .price-divider {
+        margin: 0 6px;
+    }
+}
