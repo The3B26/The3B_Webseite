@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The 3B | Premium Burger & Mehr</title>
+    <meta name="description" content="The 3B - Burger, Bocadillo, Burrito in Premium Qualität." />
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- GSAP & ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <!-- Lenis Smooth Scrolling -->
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.32/dist/lenis.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        // System-UI entspricht auf Apple-Geräten der "San Francisco", sonst modernen Alternativen
+                        sans: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            black: '#000000',
+                            dark: '#050505',
+                            // Sehr edles, dunkles Waldgrün/Midnight Green
+                            green: '#0a1410', 
+                            lightgreen: '#11221b',
+                            // Ein elegantes, nicht zu aufdringliches Gold
+                            gold: '#D4AF37',
+                            goldglow: 'rgba(212, 175, 55, 0.4)',
+                            gray: '#86868b', // Apple's typisches Text-Grau
+                            light: '#f5f5f7'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Grundlegendes Setup & Reset */
+        body, html {
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+            color: #f5f5f7;
+            overscroll-behavior: none;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Custom Scrollbar, dezent */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #000000;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #D4AF37;
+        }
+
+        /* Lenis Smooth Scroll Setup */
+        html.lenis { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto; }
+        .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+        .lenis.lenis-stopped { overflow: hidden; }
+        .lenis.lenis-scrolling iframe { pointer-events: none; }
+
+        /* Design-Elemente */
+        .glass-nav {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .hero-gradient {
+            background: radial-gradient(circle at center, #11221b 0%, #000000 70%);
+        }
+
+        /* Der Fokus-Effekt für die Karten */
+        .product-card {
+            /* Startzustand bevor GSAP übernimmt */
+            opacity: 0; 
+            transform: scale(0.9) translateY(5vh);
+            filter: blur(10px);
+            will-change: transform, opacity, filter;
+        }
+
+        .img-container {
+            border-radius: 32px;
+            overflow: hidden;
+            position: relative;
+            transform: translateZ(0); /* Hardwarebeschleunigung erzwingen */
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+        }
+
+        .img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            will-change: transform;
+            transform: scale(1.1); /* Start für Zoom-Out Effekt */
+        }
+
+        /* Premium Preis-Tag mit Glow */
+        .price-tag {
+            background: rgba(20, 20, 20, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            box-shadow: 0 0 0 rgba(212, 175, 55, 0);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Dieser Glow wird per JS aktiviert, wenn die Karte fokussiert ist */
+        .is-focused .price-tag {
+            box-shadow: 0 10px 40px var(--tw-colors-brand-goldglow);
+            border-color: rgba(212, 175, 55, 0.4);
+            transform: translateY(-5px);
+        }
+
+        /* Dynamische Linie für Kategorien */
+        .category-line {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.5), transparent);
+            transform-origin: left;
+            transform: scaleX(0);
+        }
+
+        /* Großzügiger Abstand zwischen Gerichten */
+        .menu-spacer {
+            height: 40vh; /* Sorgt dafür, dass wirklich nur ein Gericht im Fokus ist */
+        }
+    </style>
+</head>
+<body class="bg-brand-black text-brand-light font-sans selection:bg-brand-gold selection:text-black">
+
+    <!-- Sticky Navigation -->
+    <nav class="fixed w-full top-0 z-50 glass-nav transition-all duration-500" id="navbar">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12 py-4 flex justify-between items-center">
+            <div class="text-brand-light text-2xl font-semibold tracking-tight">
+                The <span class="text-brand-gold">3B</span>
+            </div>
+            <a href="images/Speisekarte.pdf" download class="group relative px-6 py-2 rounded-full overflow-hidden bg-white/5 border border-white/10 hover:border-brand-gold/50 transition-colors duration-500">
+                <span class="relative z-10 text-sm font-medium tracking-wide text-brand-light group-hover:text-brand-gold transition-colors duration-500">Menü Download</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative h-screen flex items-center justify-center overflow-hidden hero-gradient" id="hero">
+        <div class="absolute inset-0 z-0 opacity-40">
+            <!-- Ein subtiles Hintergrundbild im Hero, wird beim Scrollen animiert -->
+            <img src="images/Nr.1.JPG" onerror="this.src='https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=2000&q=80'" class="w-full h-full object-cover hero-bg" alt="Hero Background">
+            <div class="absolute inset-0 bg-brand-black/60 backdrop-blur-sm"></div>
+        </div>
+        
+        <div class="relative z-10 text-center px-6 max-w-4xl hero-content">
+            <h1 class="text-6xl md:text-8xl lg:text-[10rem] font-bold tracking-tighter mb-4 text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-500 pb-2">
+                Pure<br>Exzellenz.
+            </h1>
+            <p class="text-xl md:text-3xl text-brand-gray font-light tracking-wide mt-2">
+                Burger. Bocadillo. Burrito.
+            </p>
+            <div class="mt-16 text-brand-gold/60 animate-bounce">
+                <p class="text-xs tracking-widest uppercase mb-2">Entdecken</p>
+                <svg class="w-6 h-6 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="relative z-20 bg-brand-black pb-32">
+        
+        <!-- ================= BURGER ================= -->
+        <section class="category-section pt-32" id="burger-section">
+            <div class="max-w-7xl mx-auto px-6 lg:px-12">
+                <!-- Sticky Headline -->
+                <div class="sticky top-32 z-30 mb-20 md:mb-0">
+                    <h2 class="text-4xl md:text-6xl font-bold tracking-tighter text-brand-light opacity-90 category-title">Burger</h2>
+                    <div class="category-line w-full md:w-1/3 mt-6"></div>
+                </div>
+
+                <!-- Produkte -->
+                <div class="flex flex-col mt-10 md:mt-[-10vh]">
+                    
+                    <!-- Item 1 -->
+                    <article class="product-card w-full max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-10 md:gap-20">
+                        <div class="w-full md:w-3/5 img-container aspect-square md:aspect-[4/3]">
+                            <img src="images/Nr.1.JPG" onerror="this.src='https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=1200&q=80'" alt="Iconic Smash Burger">
+                        </div>
+                        <div class="w-full md:w-2/5 text-center md:text-left">
+                            <h3 class="text-3xl font-semibold mb-4 text-white">Iconic Smash</h3>
+                            <p class="text-brand-gray text-lg font-light leading-relaxed mb-8">2 x Rindfleischpatty, Cheddar, karamellisierte Zwiebeln, veredelt mit unserer Signature Homemade Soße.</p>
+                            <div class="price-tag inline-flex items-center gap-6 px-6 py-3">
+                                <div><span class="block text-[10px] text-brand-gray uppercase tracking-widest mb-1">Single</span><span class="text-xl font-medium text-brand-light">8,90 €</span></div>
+                                <div class="w-px h-8 bg-white/10"></div>
+                                <div><span class="block text-[10px] text-brand-gray uppercase tracking-widest mb-1">Menü</span><span class="text-xl font-medium text-brand-gold">13,90 €</span></div>
+                            </div>
+                        </div>
+                    </article>
+                    
+                    <div class="menu-spacer"></div>
+
+                    <!-- Item 2 -->
+                    <article class="product-card w-full max-w-4xl mx-auto flex flex-col md:flex-row-reverse items-center gap-10 md:gap-20">
+                        <div class="w-full md:w-3/5 img-container aspect-square md:aspect-[4/3]">
+                            <img src="images/Nr.2.JPG" onerror="this.src='https://images.unsplash.com/photo-1586816001966-79b736744398?auto=format&fit=crop&w=1200&q=80'" alt="Super Spicy Burger">
+                        </div>
+                        <div class="w-full md:w-2/5 text-center md:text-right">
+                            <h3 class="text-3xl font-semibold mb-4 text-white">Super Spicy</h3>
+                            <p class="text-brand-gray text-lg font-light leading-relaxed mb-8">Ein Erlebnis aus Hitze. 2 x Patty, feurige Jalapeños, Cheddar und unsere scharfe Homemade Soße.</p>
+                            <div class="price-tag inline-flex items-center gap-6 px-6 py-3">
+                                <div><span class="block text-[10px] text-brand-gray uppercase tracking-widest mb-1">Single</span><span class="text-xl font-medium text-brand-light">9,50 €</span></div>
+                                <div class="w-px h-8 bg-white/10"></div>
+                                <div><span class="block text-[10px] text-brand-gray uppercase tracking-widest mb-1">Menü</span><span class="text-xl font-medium text-brand-gold">14,50 €</span></div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <div class="menu-spacer"></div>
+
+                    <!-- Item 3 -->
+                    <article class="product-card w-full max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-10 md:gap-20">
+                        <div class="w-full md:w-3/5 img-container aspect-square md:aspect-[4/3]">
+                            <img src="images/Nr.3.JPG" onerror="this.src='https://images.unsplash.com/photo-1615719413546-198b25453f85?auto=format&fit=crop&w=1200&q=80'" alt="Chicken Paradies">
+                        </div>
+                        <div class="w-full md:w-2/5 text-center md:text-left">
+                            <h3 class="text-3xl font-semibold mb-4 text-white">Chicken Paradies</h3>
+                            <p class="text-brand-gray text-lg font-light leading-relaxed mb-8">Zart gegrilltes Hähnchen, abgerundet mit süßen, karamellisierten Zwiebeln und sanfter Soße.</p>
+                            <div class="price-tag inline-flex items-center gap-6 px-6 py-3">
+                                <div><span class="block text-[10px] text-brand-gray uppercase tracking-widest mb-1">Single</span><span class="text-xl font-medium text-brand-light">8,50 €</span></div>
+                                <div class="w-px h-8 bg-white/10"></div>
+                                <div><span class="block text-[10px] text-brand-gray uppercase tracking-widest mb-1">Menü</span><span class="text-xl font-medium text-brand-gold">13,50 €</span></div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <div class="menu-spacer"></div>
+
+                    <!-- Item 4 -->
+                    <article class="product-card w-full max-w-4xl mx-auto flex flex-col md:flex-row-reverse items-center gap-10 md:gap-20">
+                        <div class="w-full md:w-3/5 img-container aspect-square md:aspect-[4/3]">
+                            <img src="images/Nr.4.JPG" onerror="this.src='https://images.unsplash.com/photo-1606755962773-d324e0a13086?auto=format&fit=crop&w=1200&q=80'" alt="Chicken Crispy">
+                        </div>
+                        <div class="w-full md:w-2/5 text-center md:text-right">
+                            <h3 class="text-3xl font-semibold mb-4 text-white">Chicken Crispy</h3>
+                            <p class="text-brand-gray text-lg font-light leading-relaxed mb-8">Goldbraun paniertes Hähnchen, knusprig serviert mit geschmolzenem Cheddar.</p>
+                            <div class="price-tag inline-flex items-center gap-6 px-6 py-3">
+                                <div><span class="block text-[10px] text-brand-gray uppercase tracking-widest mb-1">Single</span><span class="text-xl font-medium text-brand-light">9,90 €</span></div>
+                                <div class="w-px h-8 bg-white/10"></div>
+                                <div><span class="block text-[10px] text-brand-gray uppercase tracking-widest mb-1">Menü</span><span class="text-xl font-medium text-brand-gold">14,90 €</span></div>
+                            </div>
+                        </div>
+                    </article>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= BURRITO ================= -->
+        <section class="category-section pt-32 mt-32 relative" id="burrito-section">
+            <!-- Hintergrund-Farb-Akzent beim Scrollen -->
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-brand-green/30 to-transparent pointer-events-none"></div>
+            
+            <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
+                <div class="sticky top-32 z-30 mb-20 md:mb-0">
+                    <h2 class="text-4xl md:text-6xl font-bold tracking-tighter text-brand-light opacity-90 category-title">Burrito</h2>
+                    <div class="category-line w-full md:w-1/3 mt-6"></div>
+                </div>
+
+                <div class="flex flex-col mt-10 md:mt-[-10vh]">
+                    
+                    <!-- Item 5 -->
+                    <article class="product-card w-full max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-10 md:gap-20">
+                        <div class="w-full md:w-3/5 img-container aspect-square md:aspect-[4/3]">
+                            <img src="images/Nr.6.JPG" onerror="this.src='https://images.unsplash.com/photo-1626700051175-6818013e1d4f?auto=format&fit=crop&w=1200&q=80'" alt="Chicken Paradies Burrito">
+                        </div>
+                        <div class="w-full md:w-2/5 text-center md:text-left">
+                            <h3 class="text-3xl font-semibold mb-4 text-white">Chicken Paradies</h3>
+                            <p class="text-brand-gray text-lg font-light leading-relaxed mb-8">Saftiges Hähnchenfleisch, knackige Pommes direkt im Wrap, Cheddar und Soße. Perfekt gerollt.</p>
+                            <div class="price-tag inline-flex items-center gap-6 px-6 py-3">
+                                <div><span class="block text-[10px] text-brand-gray uppercase tracking-widest mb-1">Single</span><span class="text-xl font-medium text-brand-light">8,90 €</span></div>
+                                <div class="w-px h-8 bg-white/10"></div>
+                                <div><span class="block text-[10px] text-brand-gray uppercase tracking-widest mb-1">Menü</span><span class="text-xl font-medium text-brand-gold">13,90 €</span></div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <div class="menu-spacer"></div>
+
+                    <!-- Item 6 -->
+                    <article class="product-card w-full max-w-4xl mx-auto flex flex-col md:flex-row-reverse items-center gap-10 md:gap-20">
+                        <div class="w-full md:w-3/5 img-container aspect-square md:aspect-[4/3]">
+                            <img src="images/Nr.7.JPG" onerror="this.src='https://images.unsplash.com/photo-1566846663365-d41a79fa4577?auto=format&fit=crop&w=1200&q=80'" alt="Chicken Spicy Burrito">
+                        </div>
+                        <div class="w-full md:w-2/5 text-center md:text-right">
+                            <h3 class="text-3xl font-semibold mb-4 text-white">Chicken Spicy</h3>
+                            <p class="text-brand-gray text-lg font-light leading-relaxed mb-8">Die scharfe Variante. Jalapeños und feurige Soße heben diesen Burrito auf ein neues Level.</p>
+                            <div class="price-tag inline-flex items-center gap-6 px-6 py-3">
+                                <div><span class="block text-[10px] text-brand-gray uppercase tracking-widest mb-1">Single</span><span class="text-xl font-medium text-brand-light">9,50 €</span></div>
+                                <div class="w-px h-8 bg-white/10"></div>
+                                <div><span class="block text-[10px] text-brand-gray uppercase tracking-widest mb-1">Menü</span><span class="text-xl font-medium text-brand-gold">14,50 €</span></div>
+                            </div>
+                        </div>
+                    </article>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= BOCADILLO ================= -->
+        <section class="category-section pt-32 mt-32" id="bocadillo-section">
+            <div class="max-w-7xl mx-auto px-6 lg:px-12">
+                <div class="sticky top-32 z-30 mb-20 md:mb-0">
+                    <h2 class="text-4xl md:text-6xl font-bold tracking-tighter text-brand-light opacity-90 category-title">Bocadillo</h2>
+                    <div class="category-line w-full md:w-1/3 mt-6"></div>
+                </div>
+
+                <div class="flex flex-col mt-10 md:mt-[-10vh]">
+                    
+                    <!-- Item 7 -->
+                    <article class="product-card w-full max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-10 md:gap-20">
+                        <div class="w-full md:w-3/5 img-container aspect-square md:aspect-[4/3]">
+                            <img src="images/Nr.8.JPG" onerror="this.src='https://images.unsplash.com/photo-1619881589316-56c7f9e6b587?auto=format&fit=crop&w=1200&q=80'" alt="Merguez Marrocan">
+                        </div>
+                        <div class="w-full md:w-2/5 text-center md:text-left">
+                            <h3 class="text-3xl font-semibold mb-4 text-white">Merguez Marrocan</h3>
+                            <p class="text-brand-gray text-lg font-light leading-relaxed mb-8">Ein orientalischer Traum. Würzige Merguez, Pommes und frischer Salat vereint in knusprigem Brot.</p>
+                            <div class="price-tag inline-flex items-center gap-6 px-6 py-3">
+                                <div><span class="block text-[10px] text-brand-gray uppercase tracking-widest mb-1">Single</span><span class="text-xl font-medium text-brand-light">10,50 €</span></div>
+                                <div class="w-px h-8 bg-white/10"></div>
+                                <div><span class="block text-[10px] text-brand-gray uppercase tracking-widest mb-1">Menü</span><span class="text-xl font-medium text-brand-gold">15,50 €</span></div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <div class="menu-spacer"></div>
+
+                    <!-- Item 10 (Shrimps) -->
+                    <article class="product-card w-full max-w-4xl mx-auto flex flex-col md:flex-row-reverse items-center gap-10 md:gap-20">
+                        <div class="w-full md:w-3/5 img-container aspect-square md:aspect-[4/3]">
+                            <img src="images/Nr.11.JPG" onerror="this.src='https://images.unsplash.com/photo-1559742811-822873691df8?auto=format&fit=crop&w=1200&q=80'" alt="Shrimps Deluxe">
+                        </div>
+                        <div class="w-full md:w-2/5 text-center md:text-right">
+                            <h3 class="text-3xl font-semibold mb-4 text-white">Shrimps Deluxe</h3>
+                            <p class="text-brand-gray text-lg font-light leading-relaxed mb-8">Zart gebratene Shrimps, vereint mit knackigem Gemüse und unserer cremigen Homemade Aioli.</p>
+                            <div class="price-tag inline-flex items-center gap-6 px-6 py-3">
+                                <div><span class="block text-[10px] text-brand-gray uppercase tracking-widest mb-1">Single</span><span class="text-xl font-medium text-brand-light">10,90 €</span></div>
+                                <div class="w-px h-8 bg-white/10"></div>
+                                <div><span class="block text-[10px] text-brand-gray uppercase tracking-widest mb-1">Menü</span><span class="text-xl font-medium text-brand-gold">15,90 €</span></div>
+                            </div>
+                        </div>
+                    </article>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= CLASSICS (Sonstiges) ================= -->
+        <section class="category-section pt-32 mt-32" id="classics-section">
+            <div class="max-w-7xl mx-auto px-6 lg:px-12">
+                <div class="sticky top-32 z-30 mb-20 md:mb-0">
+                    <h2 class="text-4xl md:text-6xl font-bold tracking-tighter text-brand-light opacity-90 category-title">Classics</h2>
+                    <div class="category-line w-full md:w-1/3 mt-6"></div>
+                </div>
+
+                <div class="flex flex-col mt-10 md:mt-[-10vh]">
+                    
+                    <!-- Bowl -->
+                    <article class="product-card w-full max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-10 md:gap-20">
+                        <div class="w-full md:w-3/5 img-container aspect-square md:aspect-[4/3]">
+                            <img src="images/Nr.15.JPG" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=1200&q=80'" alt="Crispy Chicken Bowl">
+                        </div>
+                        <div class="w-full md:w-2/5 text-center md:text-left">
+                            <h3 class="text-3xl font-semibold mb-4 text-white">Crispy Chicken Bowl</h3>
+                            <p class="text-brand-gray text-lg font-light leading-relaxed mb-8">Eine Schüssel voller Geschmack. Panierter Hähnchen, frischer Salat und Pommes in perfekter Harmonie.</p>
+                            <div class="price-tag inline-flex items-center px-8 py-3">
+                                <div><span class="block text-[10px] text-brand-gray uppercase tracking-widest mb-1">Preis</span><span class="text-xl font-medium text-brand-light">9,90 €</span></div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <div class="menu-spacer"></div>
+
+                    <!-- Salat -->
+                    <article class="product-card w-full max-w-4xl mx-auto flex flex-col md:flex-row-reverse items-center gap-10 md:gap-20 pb-32">
+                        <div class="w-full md:w-3/5 img-container aspect-square md:aspect-[4/3]">
+                            <img src="images/Nr.16.JPG" onerror="this.src='https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=1200&q=80'" alt="Bauernsalat mit Feta">
+                        </div>
+                        <div class="w-full md:w-2/5 text-center md:text-right">
+                            <h3 class="text-3xl font-semibold mb-4 text-white">Bauernsalat mit Feta</h3>
+                            <p class="text-brand-gray text-lg font-light leading-relaxed mb-8">Leicht und frisch. Ein traditioneller Mix mit feinstem Feta, Oliven und knackigem Gemüse.</p>
+                            <div class="price-tag inline-flex items-center px-8 py-3">
+                                <div><span class="block text-[10px] text-brand-gray uppercase tracking-widest mb-1">Preis</span><span class="text-xl font-medium text-brand-light">8,90 €</span></div>
+                            </div>
+                        </div>
+                    </article>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-brand-black border-t border-white/5 py-16 px-6 text-center">
+        <h2 class="text-2xl font-bold tracking-tight text-white mb-6">The <span class="text-brand-gold">3B</span></h2>
+        <p class="text-brand-gray text-sm font-light uppercase tracking-widest">&copy; 2026 The 3B. Premium Quality.</p>
+    </footer>
+
+    <!-- Initialisierung der Animationen & Scripts -->
+    <script>
+        // 1. Lenis Smooth Scrolling initialisieren
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Apple-ähnliches, sanftes Ausgleiten
+            direction: 'vertical',
+            gestureDirection: 'vertical',
+            smooth: true,
+            mouseMultiplier: 1,
+            smoothTouch: false,
+            touchMultiplier: 2,
+        });
+
+        // Lenis an GSAP ScrollTrigger binden
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => { lenis.raf(time * 1000) });
+        gsap.ticker.lagSmoothing(0, 0);
+
+        // 2. GSAP Animationen
+        document.addEventListener("DOMContentLoaded", () => {
+            gsap.registerPlugin(ScrollTrigger);
+
+            // -- Hero Parallax & Fade --
+            gsap.to(".hero-bg", {
+                scale: 1.2,
+                y: "20%",
+                ease: "none",
+                scrollTrigger: {
+                    trigger: "#hero",
+                    start: "top top",
+                    end: "bottom top",
+                    scrub: true
+                }
+            });
+            gsap.to(".hero-content", {
+                opacity: 0,
+                y: -100,
+                ease: "none",
+                scrollTrigger: {
+                    trigger: "#hero",
+                    start: "top top",
+                    end: "center top",
+                    scrub: true
+                }
+            });
+
+            // -- Kategorie Linien Animation --
+            gsap.utils.toArray('.category-title').forEach((title, i) => {
+                const line = title.nextElementSibling;
+                gsap.to(line, {
+                    scaleX: 1,
+                    ease: "power2.out",
+                    scrollTrigger: {
+                        trigger: title,
+                        start: "top 80%",
+                        end: "top 50%",
+                        scrub: 1
+                    }
+                });
+            });
+
+            // -- DAS KERNSTÜCK: Der "Fokus-Effekt" beim Scrollen --
+            const cards = gsap.utils.toArray('.product-card');
+
+            cards.forEach((card) => {
+                const img = card.querySelector('img');
+                
+                // Timeline für die gesamte Karte (Einblenden und Ausblenden verknüpft mit Scroll-Position)
+                const tl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: card,
+                        start: "top 95%",      // Startet wenn Karte unten ins Bild kommt
+                        end: "bottom 5%",      // Endet wenn Karte oben rausfliegt
+                        scrub: 1,              // Weiches Scrubbing (1 Sekunde Verzögerung für Fluss)
+                        onUpdate: (self) => {
+                            // Wenn die Karte im Zentrum ist (zwischen 30% und 70% des Scrollwegs dieser Karte)
+                            // fügen wir die Klasse "is-focused" hinzu für den Preis-Glow
+                            if (self.progress > 0.35 && self.progress < 0.65) {
+                                card.classList.add('is-focused');
+                            } else {
+                                card.classList.remove('is-focused');
+                            }
+                        }
+                    }
+                });
+
+                // Phase 1: Karte kommt ins Bild (reinzoomen, scharf werden)
+                tl.fromTo(card, 
+                    { opacity: 0.1, scale: 0.85, filter: "blur(12px)", y: 100 },
+                    { opacity: 1, scale: 1, filter: "blur(0px)", y: 0, ease: "power2.out", duration: 4 }
+                )
+                // Phase 2: Karte verlässt das Bild (rauszoomen, unscharf werden)
+                .to(card, 
+                    { opacity: 0.1, scale: 0.85, filter: "blur(12px)", y: -100, ease: "power2.in", duration: 4 }, 
+                    "+=2" // Kurze Pause im Zentrum
+                );
+
+                // Separater Parallax-Effekt für das Bild im inneren
+                // Das Bild dreht sich um 1.5 Grad und zoomt dezent
+                gsap.to(img, {
+                    scale: 1, // Zielt auf 1 (startet bei 1.1)
+                    rotation: 1.5,
+                    y: "10%",
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: card,
+                        start: "top bottom",
+                        end: "bottom top",
+                        scrub: true
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
