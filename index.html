@@ -1,15 +1,54 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de" class="scroll-smooth">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The 3B | Premium Burger & Mehr</title>
-    <meta name="description" content="The 3B - Burger, Bocadillo, Burrito in Premium Qualität." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>The 3B | Premium Burger, Bocadillo & Burrito in deiner Nähe</title>
     
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Erlebe bei The 3B in einzigartigem Ambiente Premium Burger, marokkanisch inspirierte Bocadillos und frisch gerollte Burritos. Handgemacht & lecker." />
+    <meta name="keywords" content="Burger, Bocadillo, Burrito, Restaurant, Smash Burger, Premium Food, The 3B" />
+    <meta name="author" content="The 3B" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://www.the3b.de" /> <!-- Platzhalter URL -->
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.the3b.de/" />
+    <meta property="og:title" content="The 3B | Premium Burger, Bocadillo & Burrito" />
+    <meta property="og:description" content="Handgemachte Burger, Bocadillos und Burritos in Premium-Qualität." />
+    <meta property="og:image" content="images/Logo.png" />
+
+    <!-- Security Headers Simulation via Meta (Basic CSP) -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://unpkg.com https://images.unsplash.com;">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32">
+
+    <!-- Schema.org JSON-LD für lokale Restaurants -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Restaurant",
+      "name": "The 3B",
+      "image": "images/Logo.png",
+      "servesCuisine": ["Burger", "Bocadillo", "Burrito"],
+      "priceRange": "€€",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "[Musterstraße 123]",
+        "addressLocality": "[Musterstadt]",
+        "postalCode": "[12345]",
+        "addressCountry": "DE"
+      },
+      "telephone": "[+49 123 456789]"
+    }
+    </script>
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- GSAP & ScrollTrigger -->
+    <!-- GSAP & ScrollTrigger für Apple-like Animations -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     
@@ -21,22 +60,24 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        // System-UI entspricht auf Apple-Geräten der "San Francisco", sonst modernen Alternativen
-                        sans: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica', 'sans-serif'],
+                        // System-UI für perfekte native Lesbarkeit auf allen Geräten
+                        sans: ['-apple-system', 'BlinkMacSystemFont', 'San Francisco', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'sans-serif'],
+                        serif: ['Playfair Display', 'Georgia', 'serif'],
                     },
                     colors: {
                         brand: {
-                            black: '#000000',
-                            dark: '#050505',
-                            // Sehr edles, dunkles Waldgrün/Midnight Green
-                            green: '#0a1410', 
-                            lightgreen: '#11221b',
-                            // Ein elegantes, nicht zu aufdringliches Gold
+                            // Wärmeres, eleganteres Schwarz (Anthrazit) für mehr "Flair"
+                            dark: '#18181b', 
+                            darker: '#0f0f11',
+                            light: '#fafafa',
+                            // Das Gold aus dem Logo
                             gold: '#D4AF37',
-                            goldglow: 'rgba(212, 175, 55, 0.4)',
-                            gray: '#86868b', // Apple's typisches Text-Grau
-                            light: '#f5f5f7'
+                            goldhover: '#b5952f',
+                            gray: '#a1a1aa'
                         }
+                    },
+                    boxShadow: {
+                        'gold-glow': '0 0 30px rgba(212, 175, 55, 0.25)',
                     }
                 }
             }
@@ -44,487 +85,524 @@
     </script>
 
     <style>
-        /* Grundlegendes Setup & Reset */
-        body, html {
-            margin: 0;
-            padding: 0;
-            background-color: #000000;
-            color: #f5f5f7;
+        /* Basis & Barrierefreiheit */
+        :root {
+            color-scheme: dark;
+        }
+        body {
+            background-color: #18181b; /* Sanftes Anthrazit als Haupt-Hintergrund */
+            color: #fafafa;
             overscroll-behavior: none;
             -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
         }
-
-        /* Custom Scrollbar, dezent */
-        ::-webkit-scrollbar {
-            width: 6px;
+        
+        /* Sichtbarer Fokus für Tastaturbenutzer (WCAG) */
+        *:focus-visible {
+            outline: 2px solid #D4AF37;
+            outline-offset: 4px;
         }
-        ::-webkit-scrollbar-track {
-            background: #000000;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #333;
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
+        .skip-link {
+            position: absolute;
+            top: -50px;
+            left: 0;
             background: #D4AF37;
+            color: #000;
+            padding: 8px;
+            z-index: 1000;
+            transition: top 0.2s;
+        }
+        .skip-link:focus {
+            top: 0;
         }
 
         /* Lenis Smooth Scroll Setup */
         html.lenis { height: auto; }
         .lenis.lenis-smooth { scroll-behavior: auto; }
         .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
-        .lenis.lenis-stopped { overflow: hidden; }
-        .lenis.lenis-scrolling iframe { pointer-events: none; }
 
-        /* Design-Elemente */
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f0f11; }
+        ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #D4AF37; }
+
+        /* Design Elemente */
         .glass-nav {
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(24, 24, 27, 0.85);
             backdrop-filter: saturate(180%) blur(20px);
-            -webkit-backdrop-filter: saturate(180%) blur(20px);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
         }
 
-        .hero-gradient {
-            background: radial-gradient(circle at center, #11221b 0%, #000000 70%);
-        }
-
-        /* Der Fokus-Effekt für die Karten */
+        /* Bild-Masken & Animationen */
         .product-card {
-            /* Startzustand bevor GSAP übernimmt */
-            opacity: 0; 
-            transform: scale(0.9) translateY(5vh);
-            filter: blur(10px);
-            will-change: transform, opacity, filter;
+            opacity: 0.3;
+            transform: scale(0.95);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: transform, opacity;
+        }
+        .product-card.is-active {
+            opacity: 1;
+            transform: scale(1);
         }
 
-        .img-container {
-            border-radius: 32px;
+        .img-wrapper {
+            border-radius: 24px;
             overflow: hidden;
             position: relative;
-            transform: translateZ(0); /* Hardwarebeschleunigung erzwingen */
-            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
-
-        .img-container img {
+        .img-wrapper img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transform: scale(1.1); /* Start-Scale für Parallax */
             will-change: transform;
-            transform: scale(1.1); /* Start für Zoom-Out Effekt */
         }
 
-        /* Premium Preis-Tag mit Glow */
-        .price-tag {
-            background: rgba(20, 20, 20, 0.7);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            box-shadow: 0 0 0 rgba(212, 175, 55, 0);
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        .price-badge {
+            background: rgba(24, 24, 27, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            transition: all 0.5s ease;
+        }
+        .product-card.is-active .price-badge {
+            box-shadow: var(--tw-shadow-gold-glow);
+            border-color: rgba(212, 175, 55, 0.6);
+            transform: translateY(-4px);
         }
 
-        /* Dieser Glow wird per JS aktiviert, wenn die Karte fokussiert ist */
-        .is-focused .price-tag {
-            box-shadow: 0 10px 40px var(--tw-colors-brand-goldglow);
-            border-color: rgba(212, 175, 55, 0.4);
-            transform: translateY(-5px);
-        }
-
-        /* Dynamische Linie für Kategorien */
-        .category-line {
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.5), transparent);
-            transform-origin: left;
-            transform: scaleX(0);
-        }
-
-        /* Großzügiger Abstand zwischen Gerichten */
-        .menu-spacer {
-            height: 40vh; /* Sorgt dafür, dass wirklich nur ein Gericht im Fokus ist */
+        /* Modals & Cookie Banner */
+        dialog::backdrop {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
         }
     </style>
 </head>
-<body class="bg-brand-black text-brand-light font-sans selection:bg-brand-gold selection:text-black">
+<body class="antialiased font-sans">
 
-    <!-- Sticky Navigation -->
-    <nav class="fixed w-full top-0 z-50 glass-nav transition-all duration-500" id="navbar">
-        <div class="max-w-7xl mx-auto px-6 lg:px-12 py-4 flex justify-between items-center">
-            <div class="text-brand-light text-2xl font-semibold tracking-tight">
-                The <span class="text-brand-gold">3B</span>
+    <!-- Accessibility Skip Link -->
+    <a href="#main-content" class="skip-link font-semibold">Direkt zum Hauptinhalt</a>
+
+    <!-- Sticky Header -->
+    <header class="fixed w-full top-0 z-50 glass-nav transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <!-- Logo Platzhalter, nutzt lokales Bild falls vorhanden -->
+                <div class="w-10 h-10 rounded-full border border-brand-gold/30 flex items-center justify-center overflow-hidden bg-brand-darker">
+                    <img src="images/Logo.png" alt="The 3B Logo" onerror="this.style.display='none'" class="w-full h-full object-cover">
+                    <span class="text-brand-gold font-bold text-xl" style="display:none;" id="logo-fallback">3B</span>
+                </div>
+                <span class="text-brand-light text-xl tracking-wide font-medium">The <span class="text-brand-gold">3B</span></span>
             </div>
-            <a href="images/Speisekarte.pdf" download class="group relative px-6 py-2 rounded-full overflow-hidden bg-white/5 border border-white/10 hover:border-brand-gold/50 transition-colors duration-500">
-                <span class="relative z-10 text-sm font-medium tracking-wide text-brand-light group-hover:text-brand-gold transition-colors duration-500">Menü Download</span>
+            
+            <nav aria-label="Hauptnavigation" class="hidden md:flex gap-8 items-center">
+                <a href="#burger" class="text-sm font-medium text-brand-gray hover:text-brand-gold transition-colors">Burger</a>
+                <a href="#burrito" class="text-sm font-medium text-brand-gray hover:text-brand-gold transition-colors">Burrito</a>
+                <a href="#bocadillo" class="text-sm font-medium text-brand-gray hover:text-brand-gold transition-colors">Bocadillo</a>
+            </nav>
+
+            <a href="images/Speisekarte.pdf" download class="relative inline-flex h-10 items-center justify-center rounded-full border border-brand-gold bg-brand-gold/10 px-6 text-sm font-medium text-brand-gold hover:bg-brand-gold hover:text-brand-dark transition-all duration-300 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-gold">
+                Speisekarte <span class="sr-only">(PDF Download)</span>
             </a>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <header class="relative h-screen flex items-center justify-center overflow-hidden hero-gradient" id="hero">
-        <div class="absolute inset-0 z-0 opacity-40">
-            <!-- Ein subtiles Hintergrundbild im Hero, wird beim Scrollen animiert -->
-            <img src="images/Nr.1.JPG" onerror="this.src='https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=2000&q=80'" class="w-full h-full object-cover hero-bg" alt="Hero Background">
-            <div class="absolute inset-0 bg-brand-black/60 backdrop-blur-sm"></div>
-        </div>
-        
-        <div class="relative z-10 text-center px-6 max-w-4xl hero-content">
-            <h1 class="text-6xl md:text-8xl lg:text-[10rem] font-bold tracking-tighter mb-4 text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-500 pb-2">
-                Pure<br>Exzellenz.
-            </h1>
-            <p class="text-xl md:text-3xl text-brand-gray font-light tracking-wide mt-2">
-                Burger. Bocadillo. Burrito.
-            </p>
-            <div class="mt-16 text-brand-gold/60 animate-bounce">
-                <p class="text-xs tracking-widest uppercase mb-2">Entdecken</p>
-                <svg class="w-6 h-6 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
-            </div>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="relative z-20 bg-brand-black pb-32">
-        
-        <!-- ================= BURGER ================= -->
-        <section class="category-section pt-32" id="burger-section">
-            <div class="max-w-7xl mx-auto px-6 lg:px-12">
-                <!-- Sticky Headline -->
-                <div class="sticky top-32 z-30 mb-20 md:mb-0">
-                    <h2 class="text-4xl md:text-6xl font-bold tracking-tighter text-brand-light opacity-90 category-title">Burger</h2>
-                    <div class="category-line w-full md:w-1/3 mt-6"></div>
+    <main id="main-content" class="pt-32"> <!-- pt-32 schafft Abstand zur fixierten Navigation -->
+
+        <!-- Menu Section (Scrollytelling) -->
+        <div class="relative z-10">
+            <div class="max-w-7xl mx-auto px-6">
+                
+                <!-- Kategorie: BURGER -->
+                <section id="burger" class="menu-category mb-40" aria-label="Burger Menü">
+                    <div class="md:grid md:grid-cols-12 gap-12 relative">
+                        <!-- Sticky Title -->
+                        <div class="md:col-span-4 mb-12 md:mb-0">
+                            <div class="sticky top-32">
+                                <h1 class="text-5xl md:text-7xl font-serif text-brand-light mb-4 tracking-tighter">Burger.</h1>
+                                <p class="text-brand-gray text-lg font-light">Das ikonische Smash-Erlebnis, perfektioniert.</p>
+                                <div class="h-px bg-gradient-to-r from-brand-gold/50 to-transparent w-full mt-8 scale-x-0 origin-left anim-line"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Produkte -->
+                        <div class="md:col-span-8 space-y-32">
+                            
+                            <!-- Product 1 -->
+                            <article class="product-card flex flex-col gap-6">
+                                <div class="img-wrapper aspect-[4/3] md:aspect-[16/10]">
+                                    <img src="images/Nr.1.JPG" onerror="this.src='https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=1200&q=80'" alt="Iconic Smash Burger mit zwei Rindfleischpattys und Cheddar" loading="lazy">
+                                    <div class="absolute bottom-6 right-6 price-badge px-5 py-3 rounded-xl flex items-center gap-6">
+                                        <div class="text-center"><span class="text-brand-gray text-[10px] uppercase tracking-wider block">Single</span><span class="text-brand-light font-medium text-lg">8,90 €</span></div>
+                                        <div class="w-px h-8 bg-brand-gold/30"></div>
+                                        <div class="text-center"><span class="text-brand-gray text-[10px] uppercase tracking-wider block">Menü</span><span class="text-brand-gold font-bold text-lg">13,90 €</span></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h2 class="text-3xl font-semibold text-brand-light mb-2">Iconic Smash Burger</h2>
+                                    <p class="text-brand-gray text-lg leading-relaxed">2 x Rindfleischpatty, Cheddar Käse, karamellisierte Zwiebeln, Homemade Soße.</p>
+                                </div>
+                            </article>
+
+                            <!-- Product 2 -->
+                            <article class="product-card flex flex-col gap-6">
+                                <div class="img-wrapper aspect-[4/3] md:aspect-[16/10]">
+                                    <img src="images/Nr.2.JPG" onerror="this.src='https://images.unsplash.com/photo-1586816001966-79b736744398?auto=format&fit=crop&w=1200&q=80'" alt="Super Spicy Burger mit Jalapeños" loading="lazy">
+                                    <div class="absolute bottom-6 right-6 price-badge px-5 py-3 rounded-xl flex items-center gap-6">
+                                        <div class="text-center"><span class="text-brand-gray text-[10px] uppercase tracking-wider block">Single</span><span class="text-brand-light font-medium text-lg">9,50 €</span></div>
+                                        <div class="w-px h-8 bg-brand-gold/30"></div>
+                                        <div class="text-center"><span class="text-brand-gray text-[10px] uppercase tracking-wider block">Menü</span><span class="text-brand-gold font-bold text-lg">14,50 €</span></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h2 class="text-3xl font-semibold text-brand-light mb-2">Super Spicy Burger</h2>
+                                    <p class="text-brand-gray text-lg leading-relaxed">2 x Rindfleischpatty, Cheddar Käse, karamellisierte Zwiebeln, Jalapeños, scharfe Homemade Soße.</p>
+                                </div>
+                            </article>
+                            
+                            <!-- Product 3 & 4 gekürzt der Übersicht halber, identisches Schema -->
+                            <article class="product-card flex flex-col gap-6">
+                                <div class="img-wrapper aspect-[4/3] md:aspect-[16/10]">
+                                    <img src="images/Nr.3.JPG" onerror="this.src='https://images.unsplash.com/photo-1615719413546-198b25453f85?auto=format&fit=crop&w=1200&q=80'" alt="Chicken Paradies Burger" loading="lazy">
+                                    <div class="absolute bottom-6 right-6 price-badge px-5 py-3 rounded-xl flex items-center gap-6">
+                                        <div class="text-center"><span class="text-brand-gray text-[10px] uppercase tracking-wider block">Single</span><span class="text-brand-light font-medium text-lg">8,50 €</span></div>
+                                        <div class="w-px h-8 bg-brand-gold/30"></div>
+                                        <div class="text-center"><span class="text-brand-gray text-[10px] uppercase tracking-wider block">Menü</span><span class="text-brand-gold font-bold text-lg">13,50 €</span></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h2 class="text-3xl font-semibold text-brand-light mb-2">Chicken Paradies Burger</h2>
+                                    <p class="text-brand-gray text-lg leading-relaxed">Gegrilltes Hähnchenfleisch, karamellisierte Zwiebeln, Homemade Soße.</p>
+                                </div>
+                            </article>
+
+                            <article class="product-card flex flex-col gap-6">
+                                <div class="img-wrapper aspect-[4/3] md:aspect-[16/10]">
+                                    <img src="images/Nr.4.JPG" onerror="this.src='https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=1200&q=80'" alt="Chicken Crispy Burger" loading="lazy">
+                                    <div class="absolute bottom-6 right-6 price-badge px-5 py-3 rounded-xl flex items-center gap-6">
+                                        <div class="text-center"><span class="text-brand-gray text-[10px] uppercase tracking-wider block">Single</span><span class="text-brand-light font-medium text-lg">9,90 €</span></div>
+                                        <div class="w-px h-8 bg-brand-gold/30"></div>
+                                        <div class="text-center"><span class="text-brand-gray text-[10px] uppercase tracking-wider block">Menü</span><span class="text-brand-gold font-bold text-lg">14,90 €</span></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h2 class="text-3xl font-semibold text-brand-light mb-2">Chicken Crispy Burger</h2>
+                                    <p class="text-brand-gray text-lg leading-relaxed">Panierter Hähnchenfleisch, Cheddar Käse, Homemade Soße.</p>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Kategorie: BOCADILLO -->
+                <section id="bocadillo" class="menu-category mb-40 pt-10" aria-label="Bocadillo Menü">
+                    <div class="md:grid md:grid-cols-12 gap-12 relative">
+                        <div class="md:col-span-4 mb-12 md:mb-0">
+                            <div class="sticky top-32">
+                                <h2 class="text-5xl md:text-7xl font-serif text-brand-light mb-4 tracking-tighter">Bocadillo.</h2>
+                                <p class="text-brand-gray text-lg font-light">Spanische Esskultur trifft marokkanische Gewürze.</p>
+                                <div class="h-px bg-gradient-to-r from-brand-gold/50 to-transparent w-full mt-8 scale-x-0 origin-left anim-line"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="md:col-span-8 space-y-32">
+                            <!-- Product -->
+                            <article class="product-card flex flex-col gap-6">
+                                <div class="img-wrapper aspect-[4/3] md:aspect-[16/10]">
+                                    <img src="images/Nr.8.JPG" onerror="this.src='https://images.unsplash.com/photo-1619881589316-56c7f9e6b587?auto=format&fit=crop&w=1200&q=80'" alt="Merguez Marrocan Bocadillo" loading="lazy">
+                                    <div class="absolute bottom-6 right-6 price-badge px-5 py-3 rounded-xl flex items-center gap-6">
+                                        <div class="text-center"><span class="text-brand-gray text-[10px] uppercase tracking-wider block">Single</span><span class="text-brand-light font-medium text-lg">10,50 €</span></div>
+                                        <div class="w-px h-8 bg-brand-gold/30"></div>
+                                        <div class="text-center"><span class="text-brand-gray text-[10px] uppercase tracking-wider block">Menü</span><span class="text-brand-gold font-bold text-lg">15,50 €</span></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h3 class="text-3xl font-semibold text-brand-light mb-2">Merguez Marrocan Bocadillo</h3>
+                                    <p class="text-brand-gray text-lg leading-relaxed">Saftige Merguez Wurst, knackige Pommes, Salat, Tomate, Karotten, Mais, Zwiebel, Homemade Soße.</p>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Kategorie: CLASSICS -->
+                <section id="classics" class="menu-category pt-10" aria-label="Weitere Klassiker">
+                    <div class="bg-[#1e1e24] rounded-3xl p-8 md:p-16 border border-white/5 relative overflow-hidden">
+                        <!-- Dekorativer Glow -->
+                        <div class="absolute -top-24 -right-24 w-64 h-64 bg-brand-gold/10 rounded-full blur-3xl pointer-events-none"></div>
+                        
+                        <div class="mb-12 text-center">
+                            <h2 class="text-4xl md:text-5xl font-serif text-brand-light mb-4">Classics & Bowls</h2>
+                            <p class="text-brand-gray">Unsere Favoriten neben den großen 3B.</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                            <!-- Classic Item -->
+                            <article class="product-card text-center flex flex-col items-center gap-4">
+                                <div class="w-48 h-48 rounded-full overflow-hidden border-4 border-brand-dark shadow-xl img-wrapper">
+                                    <img src="images/Nr.15.JPG" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80'" alt="Crispy Chicken Bowl" loading="lazy">
+                                </div>
+                                <h3 class="text-2xl font-semibold text-brand-light">Crispy Chicken Bowl</h3>
+                                <p class="text-brand-gray text-sm px-4">Panierter Hähnchenfleisch, Salat, Pommes, Soße</p>
+                                <span class="text-brand-gold font-medium mt-2 block">9,90 €</span>
+                            </article>
+
+                            <!-- Classic Item -->
+                            <article class="product-card text-center flex flex-col items-center gap-4">
+                                <div class="w-48 h-48 rounded-full overflow-hidden border-4 border-brand-dark shadow-xl img-wrapper">
+                                    <img src="images/Nr.16.JPG" onerror="this.src='https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=800&q=80'" alt="Bauernsalat mit Feta" loading="lazy">
+                                </div>
+                                <h3 class="text-2xl font-semibold text-brand-light">Bauernsalat mit Feta</h3>
+                                <p class="text-brand-gray text-sm px-4">Frischer Salat mit Feta, Oliven, Tomaten und Gurken</p>
+                                <span class="text-brand-gold font-medium mt-2 block">8,90 €</span>
+                            </article>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+
+        <!-- Kontakt / Reservierung Formular (DSGVO konform & FormSubmit Anbindung) -->
+        <section class="py-32 px-6 bg-brand-darker relative mt-20 border-t border-white/5">
+            <div class="max-w-3xl mx-auto">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-serif text-brand-light mb-4">Kontakt & Feedback</h2>
+                    <p class="text-brand-gray">Wir freuen uns auf deine Nachricht.</p>
                 </div>
-
-                <!-- Produkte -->
-                <div class="flex flex-col mt-10 md:mt-[-10vh]">
+                
+                <!-- 
+                  FORMSUBMIT.CO Integration
+                  Wenn das Formular gesendet wird, werden die Daten an The3B.support@gmail.com weitergeleitet.
+                -->
+                <form action="https://formsubmit.co/The3B.support@gmail.com" method="POST" class="space-y-6">
                     
-                    <!-- Item 1 -->
-                    <article class="product-card w-full max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-10 md:gap-20">
-                        <div class="w-full md:w-3/5 img-container aspect-square md:aspect-[4/3]">
-                            <img src="images/Nr.1.JPG" onerror="this.src='https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=1200&q=80'" alt="Iconic Smash Burger">
-                        </div>
-                        <div class="w-full md:w-2/5 text-center md:text-left">
-                            <h3 class="text-3xl font-semibold mb-4 text-white">Iconic Smash</h3>
-                            <p class="text-brand-gray text-lg font-light leading-relaxed mb-8">2 x Rindfleischpatty, Cheddar, karamellisierte Zwiebeln, veredelt mit unserer Signature Homemade Soße.</p>
-                            <div class="price-tag inline-flex items-center gap-6 px-6 py-3">
-                                <div><span class="block text-[10px] text-brand-gray uppercase tracking-widest mb-1">Single</span><span class="text-xl font-medium text-brand-light">8,90 €</span></div>
-                                <div class="w-px h-8 bg-white/10"></div>
-                                <div><span class="block text-[10px] text-brand-gray uppercase tracking-widest mb-1">Menü</span><span class="text-xl font-medium text-brand-gold">13,90 €</span></div>
-                            </div>
-                        </div>
-                    </article>
+                    <!-- Deaktiviert Captcha von FormSubmit für ein noch professionelleres Erlebnis (optional) -->
+                    <!-- <input type="hidden" name="_captcha" value="false"> -->
                     
-                    <div class="menu-spacer"></div>
-
-                    <!-- Item 2 -->
-                    <article class="product-card w-full max-w-4xl mx-auto flex flex-col md:flex-row-reverse items-center gap-10 md:gap-20">
-                        <div class="w-full md:w-3/5 img-container aspect-square md:aspect-[4/3]">
-                            <img src="images/Nr.2.JPG" onerror="this.src='https://images.unsplash.com/photo-1586816001966-79b736744398?auto=format&fit=crop&w=1200&q=80'" alt="Super Spicy Burger">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-brand-gray mb-2">Name *</label>
+                            <input type="text" id="name" name="name" required aria-required="true" class="w-full bg-brand-dark border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-colors" placeholder="Dein Name">
                         </div>
-                        <div class="w-full md:w-2/5 text-center md:text-right">
-                            <h3 class="text-3xl font-semibold mb-4 text-white">Super Spicy</h3>
-                            <p class="text-brand-gray text-lg font-light leading-relaxed mb-8">Ein Erlebnis aus Hitze. 2 x Patty, feurige Jalapeños, Cheddar und unsere scharfe Homemade Soße.</p>
-                            <div class="price-tag inline-flex items-center gap-6 px-6 py-3">
-                                <div><span class="block text-[10px] text-brand-gray uppercase tracking-widest mb-1">Single</span><span class="text-xl font-medium text-brand-light">9,50 €</span></div>
-                                <div class="w-px h-8 bg-white/10"></div>
-                                <div><span class="block text-[10px] text-brand-gray uppercase tracking-widest mb-1">Menü</span><span class="text-xl font-medium text-brand-gold">14,50 €</span></div>
-                            </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-brand-gray mb-2">E-Mail *</label>
+                            <input type="email" id="email" name="email" required aria-required="true" class="w-full bg-brand-dark border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-colors" placeholder="deine@email.de">
                         </div>
-                    </article>
-
-                    <div class="menu-spacer"></div>
-
-                    <!-- Item 3 -->
-                    <article class="product-card w-full max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-10 md:gap-20">
-                        <div class="w-full md:w-3/5 img-container aspect-square md:aspect-[4/3]">
-                            <img src="images/Nr.3.JPG" onerror="this.src='https://images.unsplash.com/photo-1615719413546-198b25453f85?auto=format&fit=crop&w=1200&q=80'" alt="Chicken Paradies">
+                    </div>
+                    <div>
+                        <label for="message" class="block text-sm font-medium text-brand-gray mb-2">Nachricht *</label>
+                        <textarea id="message" name="message" rows="4" required aria-required="true" class="w-full bg-brand-dark border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-colors" placeholder="Wie können wir helfen?"></textarea>
+                    </div>
+                    
+                    <!-- DSGVO Checkbox -->
+                    <div class="flex items-start">
+                        <div class="flex items-center h-5">
+                            <input id="gdpr" name="gdpr" type="checkbox" required aria-required="true" class="w-4 h-4 rounded border-gray-600 text-brand-gold bg-brand-dark focus:ring-brand-gold focus:ring-offset-brand-darker">
                         </div>
-                        <div class="w-full md:w-2/5 text-center md:text-left">
-                            <h3 class="text-3xl font-semibold mb-4 text-white">Chicken Paradies</h3>
-                            <p class="text-brand-gray text-lg font-light leading-relaxed mb-8">Zart gegrilltes Hähnchen, abgerundet mit süßen, karamellisierten Zwiebeln und sanfter Soße.</p>
-                            <div class="price-tag inline-flex items-center gap-6 px-6 py-3">
-                                <div><span class="block text-[10px] text-brand-gray uppercase tracking-widest mb-1">Single</span><span class="text-xl font-medium text-brand-light">8,50 €</span></div>
-                                <div class="w-px h-8 bg-white/10"></div>
-                                <div><span class="block text-[10px] text-brand-gray uppercase tracking-widest mb-1">Menü</span><span class="text-xl font-medium text-brand-gold">13,50 €</span></div>
-                            </div>
+                        <div class="ml-3 text-sm">
+                            <label for="gdpr" class="font-medium text-brand-gray">Datenschutzhinweis akzeptieren *</label>
+                            <p class="text-gray-500">Ich stimme zu, dass meine Daten zur Bearbeitung meiner Anfrage gemäß der <button type="button" onclick="document.getElementById('modal-datenschutz').showModal()" class="text-brand-gold hover:underline">Datenschutzerklärung</button> verarbeitet werden.</p>
                         </div>
-                    </article>
+                    </div>
 
-                    <div class="menu-spacer"></div>
+                    <!-- Honeypot (Spam-Schutz für FormSubmit) -->
+                    <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
 
-                    <!-- Item 4 -->
-                    <article class="product-card w-full max-w-4xl mx-auto flex flex-col md:flex-row-reverse items-center gap-10 md:gap-20">
-                        <div class="w-full md:w-3/5 img-container aspect-square md:aspect-[4/3]">
-                            <img src="images/Nr.4.JPG" onerror="this.src='https://images.unsplash.com/photo-1606755962773-d324e0a13086?auto=format&fit=crop&w=1200&q=80'" alt="Chicken Crispy">
-                        </div>
-                        <div class="w-full md:w-2/5 text-center md:text-right">
-                            <h3 class="text-3xl font-semibold mb-4 text-white">Chicken Crispy</h3>
-                            <p class="text-brand-gray text-lg font-light leading-relaxed mb-8">Goldbraun paniertes Hähnchen, knusprig serviert mit geschmolzenem Cheddar.</p>
-                            <div class="price-tag inline-flex items-center gap-6 px-6 py-3">
-                                <div><span class="block text-[10px] text-brand-gray uppercase tracking-widest mb-1">Single</span><span class="text-xl font-medium text-brand-light">9,90 €</span></div>
-                                <div class="w-px h-8 bg-white/10"></div>
-                                <div><span class="block text-[10px] text-brand-gray uppercase tracking-widest mb-1">Menü</span><span class="text-xl font-medium text-brand-gold">14,90 €</span></div>
-                            </div>
-                        </div>
-                    </article>
-
-                </div>
+                    <button type="submit" class="w-full bg-brand-gold text-brand-darker font-bold py-4 rounded-lg hover:bg-brand-goldhover transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-gold focus-visible:ring-offset-brand-darker">
+                        Nachricht absenden
+                    </button>
+                </form>
             </div>
         </section>
-
-        <!-- ================= BURRITO ================= -->
-        <section class="category-section pt-32 mt-32 relative" id="burrito-section">
-            <!-- Hintergrund-Farb-Akzent beim Scrollen -->
-            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-brand-green/30 to-transparent pointer-events-none"></div>
-            
-            <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
-                <div class="sticky top-32 z-30 mb-20 md:mb-0">
-                    <h2 class="text-4xl md:text-6xl font-bold tracking-tighter text-brand-light opacity-90 category-title">Burrito</h2>
-                    <div class="category-line w-full md:w-1/3 mt-6"></div>
-                </div>
-
-                <div class="flex flex-col mt-10 md:mt-[-10vh]">
-                    
-                    <!-- Item 5 -->
-                    <article class="product-card w-full max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-10 md:gap-20">
-                        <div class="w-full md:w-3/5 img-container aspect-square md:aspect-[4/3]">
-                            <img src="images/Nr.6.JPG" onerror="this.src='https://images.unsplash.com/photo-1626700051175-6818013e1d4f?auto=format&fit=crop&w=1200&q=80'" alt="Chicken Paradies Burrito">
-                        </div>
-                        <div class="w-full md:w-2/5 text-center md:text-left">
-                            <h3 class="text-3xl font-semibold mb-4 text-white">Chicken Paradies</h3>
-                            <p class="text-brand-gray text-lg font-light leading-relaxed mb-8">Saftiges Hähnchenfleisch, knackige Pommes direkt im Wrap, Cheddar und Soße. Perfekt gerollt.</p>
-                            <div class="price-tag inline-flex items-center gap-6 px-6 py-3">
-                                <div><span class="block text-[10px] text-brand-gray uppercase tracking-widest mb-1">Single</span><span class="text-xl font-medium text-brand-light">8,90 €</span></div>
-                                <div class="w-px h-8 bg-white/10"></div>
-                                <div><span class="block text-[10px] text-brand-gray uppercase tracking-widest mb-1">Menü</span><span class="text-xl font-medium text-brand-gold">13,90 €</span></div>
-                            </div>
-                        </div>
-                    </article>
-
-                    <div class="menu-spacer"></div>
-
-                    <!-- Item 6 -->
-                    <article class="product-card w-full max-w-4xl mx-auto flex flex-col md:flex-row-reverse items-center gap-10 md:gap-20">
-                        <div class="w-full md:w-3/5 img-container aspect-square md:aspect-[4/3]">
-                            <img src="images/Nr.7.JPG" onerror="this.src='https://images.unsplash.com/photo-1566846663365-d41a79fa4577?auto=format&fit=crop&w=1200&q=80'" alt="Chicken Spicy Burrito">
-                        </div>
-                        <div class="w-full md:w-2/5 text-center md:text-right">
-                            <h3 class="text-3xl font-semibold mb-4 text-white">Chicken Spicy</h3>
-                            <p class="text-brand-gray text-lg font-light leading-relaxed mb-8">Die scharfe Variante. Jalapeños und feurige Soße heben diesen Burrito auf ein neues Level.</p>
-                            <div class="price-tag inline-flex items-center gap-6 px-6 py-3">
-                                <div><span class="block text-[10px] text-brand-gray uppercase tracking-widest mb-1">Single</span><span class="text-xl font-medium text-brand-light">9,50 €</span></div>
-                                <div class="w-px h-8 bg-white/10"></div>
-                                <div><span class="block text-[10px] text-brand-gray uppercase tracking-widest mb-1">Menü</span><span class="text-xl font-medium text-brand-gold">14,50 €</span></div>
-                            </div>
-                        </div>
-                    </article>
-
-                </div>
-            </div>
-        </section>
-
-        <!-- ================= BOCADILLO ================= -->
-        <section class="category-section pt-32 mt-32" id="bocadillo-section">
-            <div class="max-w-7xl mx-auto px-6 lg:px-12">
-                <div class="sticky top-32 z-30 mb-20 md:mb-0">
-                    <h2 class="text-4xl md:text-6xl font-bold tracking-tighter text-brand-light opacity-90 category-title">Bocadillo</h2>
-                    <div class="category-line w-full md:w-1/3 mt-6"></div>
-                </div>
-
-                <div class="flex flex-col mt-10 md:mt-[-10vh]">
-                    
-                    <!-- Item 7 -->
-                    <article class="product-card w-full max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-10 md:gap-20">
-                        <div class="w-full md:w-3/5 img-container aspect-square md:aspect-[4/3]">
-                            <img src="images/Nr.8.JPG" onerror="this.src='https://images.unsplash.com/photo-1619881589316-56c7f9e6b587?auto=format&fit=crop&w=1200&q=80'" alt="Merguez Marrocan">
-                        </div>
-                        <div class="w-full md:w-2/5 text-center md:text-left">
-                            <h3 class="text-3xl font-semibold mb-4 text-white">Merguez Marrocan</h3>
-                            <p class="text-brand-gray text-lg font-light leading-relaxed mb-8">Ein orientalischer Traum. Würzige Merguez, Pommes und frischer Salat vereint in knusprigem Brot.</p>
-                            <div class="price-tag inline-flex items-center gap-6 px-6 py-3">
-                                <div><span class="block text-[10px] text-brand-gray uppercase tracking-widest mb-1">Single</span><span class="text-xl font-medium text-brand-light">10,50 €</span></div>
-                                <div class="w-px h-8 bg-white/10"></div>
-                                <div><span class="block text-[10px] text-brand-gray uppercase tracking-widest mb-1">Menü</span><span class="text-xl font-medium text-brand-gold">15,50 €</span></div>
-                            </div>
-                        </div>
-                    </article>
-
-                    <div class="menu-spacer"></div>
-
-                    <!-- Item 10 (Shrimps) -->
-                    <article class="product-card w-full max-w-4xl mx-auto flex flex-col md:flex-row-reverse items-center gap-10 md:gap-20">
-                        <div class="w-full md:w-3/5 img-container aspect-square md:aspect-[4/3]">
-                            <img src="images/Nr.11.JPG" onerror="this.src='https://images.unsplash.com/photo-1559742811-822873691df8?auto=format&fit=crop&w=1200&q=80'" alt="Shrimps Deluxe">
-                        </div>
-                        <div class="w-full md:w-2/5 text-center md:text-right">
-                            <h3 class="text-3xl font-semibold mb-4 text-white">Shrimps Deluxe</h3>
-                            <p class="text-brand-gray text-lg font-light leading-relaxed mb-8">Zart gebratene Shrimps, vereint mit knackigem Gemüse und unserer cremigen Homemade Aioli.</p>
-                            <div class="price-tag inline-flex items-center gap-6 px-6 py-3">
-                                <div><span class="block text-[10px] text-brand-gray uppercase tracking-widest mb-1">Single</span><span class="text-xl font-medium text-brand-light">10,90 €</span></div>
-                                <div class="w-px h-8 bg-white/10"></div>
-                                <div><span class="block text-[10px] text-brand-gray uppercase tracking-widest mb-1">Menü</span><span class="text-xl font-medium text-brand-gold">15,90 €</span></div>
-                            </div>
-                        </div>
-                    </article>
-
-                </div>
-            </div>
-        </section>
-
-        <!-- ================= CLASSICS (Sonstiges) ================= -->
-        <section class="category-section pt-32 mt-32" id="classics-section">
-            <div class="max-w-7xl mx-auto px-6 lg:px-12">
-                <div class="sticky top-32 z-30 mb-20 md:mb-0">
-                    <h2 class="text-4xl md:text-6xl font-bold tracking-tighter text-brand-light opacity-90 category-title">Classics</h2>
-                    <div class="category-line w-full md:w-1/3 mt-6"></div>
-                </div>
-
-                <div class="flex flex-col mt-10 md:mt-[-10vh]">
-                    
-                    <!-- Bowl -->
-                    <article class="product-card w-full max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-10 md:gap-20">
-                        <div class="w-full md:w-3/5 img-container aspect-square md:aspect-[4/3]">
-                            <img src="images/Nr.15.JPG" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=1200&q=80'" alt="Crispy Chicken Bowl">
-                        </div>
-                        <div class="w-full md:w-2/5 text-center md:text-left">
-                            <h3 class="text-3xl font-semibold mb-4 text-white">Crispy Chicken Bowl</h3>
-                            <p class="text-brand-gray text-lg font-light leading-relaxed mb-8">Eine Schüssel voller Geschmack. Panierter Hähnchen, frischer Salat und Pommes in perfekter Harmonie.</p>
-                            <div class="price-tag inline-flex items-center px-8 py-3">
-                                <div><span class="block text-[10px] text-brand-gray uppercase tracking-widest mb-1">Preis</span><span class="text-xl font-medium text-brand-light">9,90 €</span></div>
-                            </div>
-                        </div>
-                    </article>
-
-                    <div class="menu-spacer"></div>
-
-                    <!-- Salat -->
-                    <article class="product-card w-full max-w-4xl mx-auto flex flex-col md:flex-row-reverse items-center gap-10 md:gap-20 pb-32">
-                        <div class="w-full md:w-3/5 img-container aspect-square md:aspect-[4/3]">
-                            <img src="images/Nr.16.JPG" onerror="this.src='https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=1200&q=80'" alt="Bauernsalat mit Feta">
-                        </div>
-                        <div class="w-full md:w-2/5 text-center md:text-right">
-                            <h3 class="text-3xl font-semibold mb-4 text-white">Bauernsalat mit Feta</h3>
-                            <p class="text-brand-gray text-lg font-light leading-relaxed mb-8">Leicht und frisch. Ein traditioneller Mix mit feinstem Feta, Oliven und knackigem Gemüse.</p>
-                            <div class="price-tag inline-flex items-center px-8 py-3">
-                                <div><span class="block text-[10px] text-brand-gray uppercase tracking-widest mb-1">Preis</span><span class="text-xl font-medium text-brand-light">8,90 €</span></div>
-                            </div>
-                        </div>
-                    </article>
-
-                </div>
-            </div>
-        </section>
-
     </main>
 
-    <footer class="bg-brand-black border-t border-white/5 py-16 px-6 text-center">
-        <h2 class="text-2xl font-bold tracking-tight text-white mb-6">The <span class="text-brand-gold">3B</span></h2>
-        <p class="text-brand-gray text-sm font-light uppercase tracking-widest">&copy; 2026 The 3B. Premium Quality.</p>
+    <!-- Footer mit rechtlichen Links -->
+    <footer class="bg-[#0a0a0c] border-t border-white/5 pt-20 pb-10 px-6">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+            <div class="md:col-span-2">
+                <span class="text-brand-light text-2xl tracking-wide font-medium block mb-6">The <span class="text-brand-gold">3B</span></span>
+                <p class="text-brand-gray text-sm leading-relaxed max-w-sm">Premium Burger, Bocadillos und Burritos. Frische Zutaten, handgemacht mit Leidenschaft.</p>
+            </div>
+            <div>
+                <h4 class="text-white font-semibold mb-4">Rechtliches</h4>
+                <ul class="space-y-3 text-sm text-brand-gray">
+                    <li><button onclick="document.getElementById('modal-impressum').showModal()" class="hover:text-brand-gold transition-colors">Impressum</button></li>
+                    <li><button onclick="document.getElementById('modal-datenschutz').showModal()" class="hover:text-brand-gold transition-colors">Datenschutz</button></li>
+                    <li><button onclick="document.getElementById('modal-agb').showModal()" class="hover:text-brand-gold transition-colors">AGB</button></li>
+                    <li><button onclick="openCookieSettings()" class="hover:text-brand-gold transition-colors">Cookie-Einstellungen</button></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-semibold mb-4">Kontakt</h4>
+                <ul class="space-y-3 text-sm text-brand-gray">
+                    <li>[Musterstraße 123]</li>
+                    <li>[12345 Musterstadt]</li>
+                    <!-- Updated Email Address -->
+                    <li><a href="mailto:The3B.support@gmail.com" class="hover:text-brand-gold transition-colors">The3B.support@gmail.com</a></li>
+                    <li>[+49 123 456789]</li>
+                </ul>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto border-t border-white/5 pt-8 text-center md:text-left flex flex-col md:flex-row justify-between items-center">
+            <p class="text-brand-gray text-xs">&copy; 2026 The 3B. Alle Rechte vorbehalten.</p>
+            <p class="text-brand-gray text-xs mt-4 md:mt-0">Design inspiriert durch Premium Webstandards.</p>
+        </div>
     </footer>
 
-    <!-- Initialisierung der Animationen & Scripts -->
+    <!-- ================= MODALS (Rechtstexte) ================= -->
+    
+    <!-- Impressum Modal -->
+    <dialog id="modal-impressum" class="bg-brand-dark text-brand-light p-8 rounded-2xl w-[90%] max-w-2xl border border-white/10 m-auto mt-20 md:mt-auto">
+        <div class="flex justify-between items-start mb-6">
+            <h2 class="text-3xl font-serif text-brand-gold">Impressum</h2>
+            <button onclick="this.closest('dialog').close()" class="text-brand-gray hover:text-white" aria-label="Schließen">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+        <div class="text-brand-gray text-sm space-y-4 max-h-[60vh] overflow-y-auto pr-4">
+            <p><strong>Angaben gemäß § 5 DDG</strong></p>
+            <p>[Vorname Name / Firmenname]<br>[Straße Hausnummer]<br>[PLZ Ort]</p>
+            <p><strong>Vertreten durch:</strong><br>[Name des Vertretungsberechtigten]</p>
+            <p><strong>Kontakt:</strong><br>Telefon: [+49 (0) 123 44 55 66]<br>E-Mail: The3B.support@gmail.com</p>
+            <p><strong>Umsatzsteuer-ID:</strong><br>Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz:<br>[DE XXX XXX XXX]</p>
+            <p><strong>Verbraucherstreitbeilegung/Universalschlichtungsstelle:</strong><br>Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+        </div>
+    </dialog>
+
+    <!-- Datenschutz Modal -->
+    <dialog id="modal-datenschutz" class="bg-brand-dark text-brand-light p-8 rounded-2xl w-[90%] max-w-2xl border border-white/10 m-auto mt-20 md:mt-auto">
+        <div class="flex justify-between items-start mb-6">
+            <h2 class="text-3xl font-serif text-brand-gold">Datenschutzerklärung</h2>
+            <button onclick="this.closest('dialog').close()" class="text-brand-gray hover:text-white" aria-label="Schließen">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+        <div class="text-brand-gray text-sm space-y-4 max-h-[60vh] overflow-y-auto pr-4">
+            <p><strong>1. Datenschutz auf einen Blick</strong><br>Allgemeine Hinweise: Die folgenden Hinweise geben einen einfachen Überblick darüber, was mit Ihren personenbezogenen Daten passiert, wenn Sie diese Website besuchen...</p>
+            <p><em>(Hinweis: Dies ist ein Platzhalter. Hier muss ein vollständiger, auf deine Website zugeschnittener Text eingefügt werden, der Themen wie Hosting, Server-Log-Files, Kontaktformular etc. abdeckt.)</em></p>
+            <p><strong>Verantwortliche Stelle:</strong><br>[Name]<br>[Adresse]</p>
+            <p><strong>Kontakt für Datenschutzanfragen:</strong><br>The3B.support@gmail.com</p>
+        </div>
+    </dialog>
+    
+    <!-- AGB Modal (Optional) -->
+    <dialog id="modal-agb" class="bg-brand-dark text-brand-light p-8 rounded-2xl w-[90%] max-w-2xl border border-white/10 m-auto mt-20 md:mt-auto">
+        <div class="flex justify-between items-start mb-6">
+            <h2 class="text-3xl font-serif text-brand-gold">AGB</h2>
+            <button onclick="this.closest('dialog').close()" class="text-brand-gray hover:text-white" aria-label="Schließen">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+        <div class="text-brand-gray text-sm space-y-4">
+            <p>[Platzhalter für Allgemeine Geschäftsbedingungen, sofern für Online-Bestellungen oder Ähnliches relevant.]</p>
+        </div>
+    </dialog>
+
+
+    <!-- ================= COOKIE CONSENT BANNER ================= -->
+    <div id="cookie-banner" class="fixed bottom-0 left-0 w-full bg-[#18181b]/95 backdrop-blur-md border-t border-white/10 p-6 z-[100] transform translate-y-full transition-transform duration-500 ease-in-out hidden" role="dialog" aria-live="polite">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="text-sm text-brand-gray md:max-w-2xl">
+                <strong class="text-white block mb-2">Wir respektieren deine Privatsphäre</strong>
+                Wir verwenden Cookies, um die grundlegende Funktionalität der Website sicherzustellen (Notwendig). Optionale Cookies für Analysezwecke oder Marketing setzen wir auf dieser reinen Präsentationsseite bewusst <strong>nicht</strong> ein. Weitere Informationen findest du in unserer <button onclick="document.getElementById('modal-datenschutz').showModal()" class="text-brand-gold hover:underline">Datenschutzerklärung</button>.
+            </div>
+            <div class="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+                <button id="cookie-accept" class="bg-brand-gold text-brand-darker font-bold py-2 px-6 rounded-lg hover:bg-brand-goldhover transition-colors whitespace-nowrap focus:ring-2 focus:ring-white">
+                    Einverstanden
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ================= SCRIPTS & ANIMATIONEN ================= -->
     <script>
-        // 1. Lenis Smooth Scrolling initialisieren
+        // Fallback-Logik für Logo im Header, falls Bild nicht lädt
+        document.querySelector('.w-10 img').addEventListener('error', function() {
+            document.getElementById('logo-fallback').style.display = 'block';
+        });
+
+        // 1. Lenis Smooth Scrolling
         const lenis = new Lenis({
             duration: 1.2,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Apple-ähnliches, sanftes Ausgleiten
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
             direction: 'vertical',
             gestureDirection: 'vertical',
             smooth: true,
-            mouseMultiplier: 1,
-            smoothTouch: false,
-            touchMultiplier: 2,
         });
 
-        // Lenis an GSAP ScrollTrigger binden
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        // 2. Cookie Banner Logik (DSGVO Basis)
+        document.addEventListener("DOMContentLoaded", () => {
+            const banner = document.getElementById('cookie-banner');
+            const acceptBtn = document.getElementById('cookie-accept');
+            
+            // Prüfen ob Consent schon erteilt wurde
+            if (!localStorage.getItem('3b_cookie_consent')) {
+                banner.classList.remove('hidden');
+                // Timeout für sanftes hochgleiten
+                setTimeout(() => banner.classList.remove('translate-y-full'), 100);
+            }
+
+            acceptBtn.addEventListener('click', () => {
+                localStorage.setItem('3b_cookie_consent', 'true');
+                banner.classList.add('translate-y-full');
+                setTimeout(() => banner.classList.add('hidden'), 500);
+            });
+        });
+
+        function openCookieSettings() {
+            const banner = document.getElementById('cookie-banner');
+            banner.classList.remove('hidden');
+            setTimeout(() => banner.classList.remove('translate-y-full'), 10);
+            localStorage.removeItem('3b_cookie_consent'); // Resets consent to show banner again
+        }
+
+        // 3. GSAP Animationen (Der Apple "Fokus" Effekt)
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Verbinde GSAP mit Lenis
         lenis.on('scroll', ScrollTrigger.update);
         gsap.ticker.add((time) => { lenis.raf(time * 1000) });
         gsap.ticker.lagSmoothing(0, 0);
 
-        // 2. GSAP Animationen
-        document.addEventListener("DOMContentLoaded", () => {
-            gsap.registerPlugin(ScrollTrigger);
-
-            // -- Hero Parallax & Fade --
-            gsap.to(".hero-bg", {
-                scale: 1.2,
-                y: "20%",
-                ease: "none",
+        // Category Line Animation
+        gsap.utils.toArray('.anim-line').forEach(line => {
+            gsap.to(line, {
+                scaleX: 1,
                 scrollTrigger: {
-                    trigger: "#hero",
-                    start: "top top",
-                    end: "bottom top",
-                    scrub: true
+                    trigger: line,
+                    start: "top 80%",
+                    end: "top 50%",
+                    scrub: 1
                 }
             });
-            gsap.to(".hero-content", {
-                opacity: 0,
-                y: -100,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: "#hero",
-                    start: "top top",
-                    end: "center top",
-                    scrub: true
-                }
+        });
+
+        // Der Premium Scrollytelling Effekt für die Produkte
+        gsap.utils.toArray('.product-card').forEach(card => {
+            const img = card.querySelector('img');
+            
+            // Karte fokussiert sich beim Erreichen der Bildschirmmitte
+            ScrollTrigger.create({
+                trigger: card,
+                start: "top 85%", // Aktiviert, wenn Karte unten im Bild ankommt
+                end: "bottom 15%", // Deaktiviert, wenn sie oben rausscrollt
+                toggleClass: "is-active",
+                markers: false 
             });
 
-            // -- Kategorie Linien Animation --
-            gsap.utils.toArray('.category-title').forEach((title, i) => {
-                const line = title.nextElementSibling;
-                gsap.to(line, {
-                    scaleX: 1,
-                    ease: "power2.out",
-                    scrollTrigger: {
-                        trigger: title,
-                        start: "top 80%",
-                        end: "top 50%",
-                        scrub: 1
-                    }
-                });
-            });
-
-            // -- DAS KERNSTÜCK: Der "Fokus-Effekt" beim Scrollen --
-            const cards = gsap.utils.toArray('.product-card');
-
-            cards.forEach((card) => {
-                const img = card.querySelector('img');
-                
-                // Timeline für die gesamte Karte (Einblenden und Ausblenden verknüpft mit Scroll-Position)
-                const tl = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: card,
-                        start: "top 95%",      // Startet wenn Karte unten ins Bild kommt
-                        end: "bottom 5%",      // Endet wenn Karte oben rausfliegt
-                        scrub: 1,              // Weiches Scrubbing (1 Sekunde Verzögerung für Fluss)
-                        onUpdate: (self) => {
-                            // Wenn die Karte im Zentrum ist (zwischen 30% und 70% des Scrollwegs dieser Karte)
-                            // fügen wir die Klasse "is-focused" hinzu für den Preis-Glow
-                            if (self.progress > 0.35 && self.progress < 0.65) {
-                                card.classList.add('is-focused');
-                            } else {
-                                card.classList.remove('is-focused');
-                            }
-                        }
-                    }
-                });
-
-                // Phase 1: Karte kommt ins Bild (reinzoomen, scharf werden)
-                tl.fromTo(card, 
-                    { opacity: 0.1, scale: 0.85, filter: "blur(12px)", y: 100 },
-                    { opacity: 1, scale: 1, filter: "blur(0px)", y: 0, ease: "power2.out", duration: 4 }
-                )
-                // Phase 2: Karte verlässt das Bild (rauszoomen, unscharf werden)
-                .to(card, 
-                    { opacity: 0.1, scale: 0.85, filter: "blur(12px)", y: -100, ease: "power2.in", duration: 4 }, 
-                    "+=2" // Kurze Pause im Zentrum
-                );
-
-                // Separater Parallax-Effekt für das Bild im inneren
-                // Das Bild dreht sich um 1.5 Grad und zoomt dezent
+            // Sanfter Parallax Effekt für das Bild in der Karte
+            if(img) {
                 gsap.to(img, {
-                    scale: 1, // Zielt auf 1 (startet bei 1.1)
-                    rotation: 1.5,
-                    y: "10%",
+                    y: "15%",
+                    scale: 1, // Startet im CSS bei 1.1, zoomt also leicht raus
                     ease: "none",
                     scrollTrigger: {
                         trigger: card,
@@ -533,8 +611,10 @@
                         scrub: true
                     }
                 });
-            });
+            }
         });
     </script>
 </body>
 </html>
+
+
