@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="de" class="scroll-smooth">
+<!-- WICHTIG: Kein class="scroll-smooth" hier, da Lenis (JS) das Scrollen übernimmt! -->
+<html lang="de">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <title>The 3B | Premium Burger, Bocadillo & Burrito in deiner Nähe</title>
+    <title>The 3B | Premium Burger, Bocadillo & Burrito</title>
     
     <!-- SEO Meta Tags -->
     <meta name="description" content="Erlebe bei The 3B in einzigartigem Ambiente Premium Burger, marokkanisch inspirierte Bocadillos und frisch gerollte Burritos. Handgemacht & lecker." />
@@ -19,13 +20,12 @@
     <meta property="og:description" content="Handgemachte Burger, Bocadillos und Burritos in Premium-Qualität." />
     <meta property="og:image" content="images/Logo.png" />
 
-    <!-- Security Headers Simulation via Meta (Basic CSP) -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://unpkg.com https://images.unsplash.com;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://unpkg.com https://images.unsplash.com https://formsubmit.co;">
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32">
 
-    <!-- Schema.org JSON-LD für lokale Restaurants -->
+    <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -48,7 +48,7 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- GSAP & ScrollTrigger für Apple-like Animations -->
+    <!-- GSAP & ScrollTrigger -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     
@@ -60,17 +60,14 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        // System-UI für perfekte native Lesbarkeit auf allen Geräten
                         sans: ['-apple-system', 'BlinkMacSystemFont', 'San Francisco', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'sans-serif'],
                         serif: ['Playfair Display', 'Georgia', 'serif'],
                     },
                     colors: {
                         brand: {
-                            // Wärmeres, eleganteres Schwarz (Anthrazit) für mehr "Flair"
                             dark: '#18181b', 
                             darker: '#0f0f11',
                             light: '#fafafa',
-                            // Das Gold aus dem Logo
                             gold: '#D4AF37',
                             goldhover: '#b5952f',
                             gray: '#a1a1aa'
@@ -85,65 +82,40 @@
     </script>
 
     <style>
-        /* Basis & Barrierefreiheit */
-        :root {
-            color-scheme: dark;
-        }
+        :root { color-scheme: dark; }
         body {
-            background-color: #18181b; /* Sanftes Anthrazit als Haupt-Hintergrund */
+            background-color: #18181b; 
             color: #fafafa;
             overscroll-behavior: none;
             -webkit-font-smoothing: antialiased;
         }
         
-        /* Sichtbarer Fokus für Tastaturbenutzer (WCAG) */
-        *:focus-visible {
-            outline: 2px solid #D4AF37;
-            outline-offset: 4px;
-        }
-        .skip-link {
-            position: absolute;
-            top: -50px;
-            left: 0;
-            background: #D4AF37;
-            color: #000;
-            padding: 8px;
-            z-index: 1000;
-            transition: top 0.2s;
-        }
-        .skip-link:focus {
-            top: 0;
-        }
+        *:focus-visible { outline: 2px solid #D4AF37; outline-offset: 4px; }
+        .skip-link { position: absolute; top: -50px; left: 0; background: #D4AF37; color: #000; padding: 8px; z-index: 1000; transition: top 0.2s; }
+        .skip-link:focus { top: 0; }
 
-        /* Lenis Smooth Scroll Setup */
         html.lenis { height: auto; }
         .lenis.lenis-smooth { scroll-behavior: auto; }
         .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
 
-        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #0f0f11; }
         ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #D4AF37; }
 
-        /* Design Elemente */
         .glass-nav {
             background: rgba(24, 24, 27, 0.85);
             backdrop-filter: saturate(180%) blur(20px);
             border-bottom: 1px solid rgba(212, 175, 55, 0.1);
         }
 
-        /* Bild-Masken & Animationen */
         .product-card {
             opacity: 0.3;
             transform: scale(0.95);
             transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
             will-change: transform, opacity;
         }
-        .product-card.is-active {
-            opacity: 1;
-            transform: scale(1);
-        }
+        .product-card.is-active { opacity: 1; transform: scale(1); }
 
         .img-wrapper {
             border-radius: 24px;
@@ -155,7 +127,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transform: scale(1.1); /* Start-Scale für Parallax */
+            transform: scale(1.1); 
             will-change: transform;
         }
 
@@ -171,23 +143,16 @@
             transform: translateY(-4px);
         }
 
-        /* Modals & Cookie Banner */
-        dialog::backdrop {
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(5px);
-        }
+        dialog::backdrop { background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px); }
     </style>
 </head>
 <body class="antialiased font-sans">
 
-    <!-- Accessibility Skip Link -->
     <a href="#main-content" class="skip-link font-semibold">Direkt zum Hauptinhalt</a>
 
-    <!-- Sticky Header -->
     <header class="fixed w-full top-0 z-50 glass-nav transition-all duration-300" id="navbar">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <!-- Logo Platzhalter, nutzt lokales Bild falls vorhanden -->
                 <div class="w-10 h-10 rounded-full border border-brand-gold/30 flex items-center justify-center overflow-hidden bg-brand-darker">
                     <img src="images/Logo.png" alt="The 3B Logo" onerror="this.style.display='none'" class="w-full h-full object-cover">
                     <span class="text-brand-gold font-bold text-xl" style="display:none;" id="logo-fallback">3B</span>
@@ -199,39 +164,38 @@
                 <a href="#burger" class="text-sm font-medium text-brand-gray hover:text-brand-gold transition-colors">Burger</a>
                 <a href="#burrito" class="text-sm font-medium text-brand-gray hover:text-brand-gold transition-colors">Burrito</a>
                 <a href="#bocadillo" class="text-sm font-medium text-brand-gray hover:text-brand-gold transition-colors">Bocadillo</a>
+                <a href="#classics" class="text-sm font-medium text-brand-gray hover:text-brand-gold transition-colors">Classics</a>
             </nav>
 
-            <a href="images/Speisekarte.pdf" download class="relative inline-flex h-10 items-center justify-center rounded-full border border-brand-gold bg-brand-gold/10 px-6 text-sm font-medium text-brand-gold hover:bg-brand-gold hover:text-brand-dark transition-all duration-300 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-gold">
+            <a href="images/Speisekarte.pdf" download class="relative inline-flex h-10 items-center justify-center rounded-full border border-brand-gold bg-brand-gold/10 px-6 text-sm font-medium text-brand-gold hover:bg-brand-gold hover:text-brand-dark transition-all duration-300">
                 Speisekarte <span class="sr-only">(PDF Download)</span>
             </a>
         </div>
     </header>
 
-    <main id="main-content" class="pt-32"> <!-- pt-32 schafft Abstand zur fixierten Navigation -->
+    <!-- Content startet sofort mit den Produkten -->
+    <main id="main-content" class="pt-32"> 
 
-        <!-- Menu Section (Scrollytelling) -->
         <div class="relative z-10">
             <div class="max-w-7xl mx-auto px-6">
                 
-                <!-- Kategorie: BURGER -->
-                <section id="burger" class="menu-category mb-40" aria-label="Burger Menü">
+                <!-- ==================== BURGER ==================== -->
+                <section id="burger" class="menu-category mb-40 pt-10" aria-label="Burger Menü">
                     <div class="md:grid md:grid-cols-12 gap-12 relative">
-                        <!-- Sticky Title -->
                         <div class="md:col-span-4 mb-12 md:mb-0">
                             <div class="sticky top-32">
                                 <h1 class="text-5xl md:text-7xl font-serif text-brand-light mb-4 tracking-tighter">Burger.</h1>
-                                <p class="text-brand-gray text-lg font-light">Das ikonische Smash-Erlebnis, perfektioniert.</p>
+                                <p class="text-brand-gray text-lg font-light">Handgemacht, saftig und unvergesslich.</p>
                                 <div class="h-px bg-gradient-to-r from-brand-gold/50 to-transparent w-full mt-8 scale-x-0 origin-left anim-line"></div>
                             </div>
                         </div>
                         
-                        <!-- Produkte -->
                         <div class="md:col-span-8 space-y-32">
                             
-                            <!-- Product 1 -->
+                            <!-- 1. Iconic Smash Burger -->
                             <article class="product-card flex flex-col gap-6">
                                 <div class="img-wrapper aspect-[4/3] md:aspect-[16/10]">
-                                    <img src="images/Nr.1.JPG" onerror="this.src='https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=1200&q=80'" alt="Iconic Smash Burger mit zwei Rindfleischpattys und Cheddar" loading="lazy">
+                                    <img src="images/Nr.1.JPG" onerror="this.src='https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=1200&q=80'" alt="Iconic Smash Burger" loading="lazy">
                                     <div class="absolute bottom-6 right-6 price-badge px-5 py-3 rounded-xl flex items-center gap-6">
                                         <div class="text-center"><span class="text-brand-gray text-[10px] uppercase tracking-wider block">Single</span><span class="text-brand-light font-medium text-lg">8,90 €</span></div>
                                         <div class="w-px h-8 bg-brand-gold/30"></div>
@@ -240,14 +204,14 @@
                                 </div>
                                 <div>
                                     <h2 class="text-3xl font-semibold text-brand-light mb-2">Iconic Smash Burger</h2>
-                                    <p class="text-brand-gray text-lg leading-relaxed">2 x Rindfleischpatty, Cheddar Käse, karamellisierte Zwiebeln, Homemade Soße.</p>
+                                    <p class="text-brand-gray text-lg leading-relaxed">2 x Rindfleischpatty, Cheddar Käse, Karamellisierte Zwiebeln, Homemade Soße</p>
                                 </div>
                             </article>
 
-                            <!-- Product 2 -->
+                            <!-- 2. Super Spicy Burger -->
                             <article class="product-card flex flex-col gap-6">
                                 <div class="img-wrapper aspect-[4/3] md:aspect-[16/10]">
-                                    <img src="images/Nr.2.JPG" onerror="this.src='https://images.unsplash.com/photo-1586816001966-79b736744398?auto=format&fit=crop&w=1200&q=80'" alt="Super Spicy Burger mit Jalapeños" loading="lazy">
+                                    <img src="images/Nr.2.JPG" onerror="this.src='https://images.unsplash.com/photo-1586816001966-79b736744398?auto=format&fit=crop&w=1200&q=80'" alt="Super Spicy Burger" loading="lazy">
                                     <div class="absolute bottom-6 right-6 price-badge px-5 py-3 rounded-xl flex items-center gap-6">
                                         <div class="text-center"><span class="text-brand-gray text-[10px] uppercase tracking-wider block">Single</span><span class="text-brand-light font-medium text-lg">9,50 €</span></div>
                                         <div class="w-px h-8 bg-brand-gold/30"></div>
@@ -256,11 +220,11 @@
                                 </div>
                                 <div>
                                     <h2 class="text-3xl font-semibold text-brand-light mb-2">Super Spicy Burger</h2>
-                                    <p class="text-brand-gray text-lg leading-relaxed">2 x Rindfleischpatty, Cheddar Käse, karamellisierte Zwiebeln, Jalapeños, scharfe Homemade Soße.</p>
+                                    <p class="text-brand-gray text-lg leading-relaxed">2 x Rindfleischpatty, Cheddar Käse, Karamellisierte Zwiebeln, Jalapeños, Scharfe Homemade Soße</p>
                                 </div>
                             </article>
                             
-                            <!-- Product 3 & 4 gekürzt der Übersicht halber, identisches Schema -->
+                            <!-- 3. Chicken Paradies Burger -->
                             <article class="product-card flex flex-col gap-6">
                                 <div class="img-wrapper aspect-[4/3] md:aspect-[16/10]">
                                     <img src="images/Nr.3.JPG" onerror="this.src='https://images.unsplash.com/photo-1615719413546-198b25453f85?auto=format&fit=crop&w=1200&q=80'" alt="Chicken Paradies Burger" loading="lazy">
@@ -272,10 +236,11 @@
                                 </div>
                                 <div>
                                     <h2 class="text-3xl font-semibold text-brand-light mb-2">Chicken Paradies Burger</h2>
-                                    <p class="text-brand-gray text-lg leading-relaxed">Gegrilltes Hähnchenfleisch, karamellisierte Zwiebeln, Homemade Soße.</p>
+                                    <p class="text-brand-gray text-lg leading-relaxed">Gegrilltes Hähnchenfleisch, Karamellisierte Zwiebeln, Homemade Soße</p>
                                 </div>
                             </article>
 
+                            <!-- 4. Chicken Crispy Burger -->
                             <article class="product-card flex flex-col gap-6">
                                 <div class="img-wrapper aspect-[4/3] md:aspect-[16/10]">
                                     <img src="images/Nr.4.JPG" onerror="this.src='https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=1200&q=80'" alt="Chicken Crispy Burger" loading="lazy">
@@ -287,14 +252,63 @@
                                 </div>
                                 <div>
                                     <h2 class="text-3xl font-semibold text-brand-light mb-2">Chicken Crispy Burger</h2>
-                                    <p class="text-brand-gray text-lg leading-relaxed">Panierter Hähnchenfleisch, Cheddar Käse, Homemade Soße.</p>
+                                    <p class="text-brand-gray text-lg leading-relaxed">Panierter Hähnchenfleisch, Cheddar Käse, Homemade Soße</p>
                                 </div>
                             </article>
                         </div>
                     </div>
                 </section>
 
-                <!-- Kategorie: BOCADILLO -->
+                <!-- ==================== BURRITO ==================== -->
+                <section id="burrito" class="menu-category mb-40 pt-10" aria-label="Burrito Menü">
+                    <div class="md:grid md:grid-cols-12 gap-12 relative">
+                        <div class="md:col-span-4 mb-12 md:mb-0">
+                            <div class="sticky top-32">
+                                <h2 class="text-5xl md:text-7xl font-serif text-brand-light mb-4 tracking-tighter">Burrito.</h2>
+                                <p class="text-brand-gray text-lg font-light">Frisch gerollt, prall gefüllt und voller Geschmack.</p>
+                                <div class="h-px bg-gradient-to-r from-brand-gold/50 to-transparent w-full mt-8 scale-x-0 origin-left anim-line"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="md:col-span-8 space-y-32">
+                            
+                            <!-- 6. Chicken Paradies Burrito -->
+                            <article class="product-card flex flex-col gap-6">
+                                <div class="img-wrapper aspect-[4/3] md:aspect-[16/10]">
+                                    <img src="images/Nr.6.JPG" onerror="this.src='https://images.unsplash.com/photo-1626700051175-6818013e1d4f?auto=format&fit=crop&w=1200&q=80'" alt="Chicken Paradies Burrito" loading="lazy">
+                                    <div class="absolute bottom-6 right-6 price-badge px-5 py-3 rounded-xl flex items-center gap-6">
+                                        <div class="text-center"><span class="text-brand-gray text-[10px] uppercase tracking-wider block">Single</span><span class="text-brand-light font-medium text-lg">8,90 €</span></div>
+                                        <div class="w-px h-8 bg-brand-gold/30"></div>
+                                        <div class="text-center"><span class="text-brand-gray text-[10px] uppercase tracking-wider block">Menü</span><span class="text-brand-gold font-bold text-lg">13,90 €</span></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h3 class="text-3xl font-semibold text-brand-light mb-2">Chicken Paradies Burrito</h3>
+                                    <p class="text-brand-gray text-lg leading-relaxed">Hähnchenfleisch, Knackige Pommes, Cheddar Käse, Homemade Soße</p>
+                                </div>
+                            </article>
+
+                            <!-- 7. Chicken Spicy Burrito -->
+                            <article class="product-card flex flex-col gap-6">
+                                <div class="img-wrapper aspect-[4/3] md:aspect-[16/10]">
+                                    <img src="images/Nr.7.JPG" onerror="this.src='https://images.unsplash.com/photo-1566846663365-d41a79fa4577?auto=format&fit=crop&w=1200&q=80'" alt="Chicken Spicy Burrito" loading="lazy">
+                                    <div class="absolute bottom-6 right-6 price-badge px-5 py-3 rounded-xl flex items-center gap-6">
+                                        <div class="text-center"><span class="text-brand-gray text-[10px] uppercase tracking-wider block">Single</span><span class="text-brand-light font-medium text-lg">9,50 €</span></div>
+                                        <div class="w-px h-8 bg-brand-gold/30"></div>
+                                        <div class="text-center"><span class="text-brand-gray text-[10px] uppercase tracking-wider block">Menü</span><span class="text-brand-gold font-bold text-lg">14,50 €</span></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h3 class="text-3xl font-semibold text-brand-light mb-2">Chicken Spicy Burrito</h3>
+                                    <p class="text-brand-gray text-lg leading-relaxed">Hähnchenfleisch, Knackige Pommes, Jalapeños, Cheddar Käse, Scharfe Homemade Soße</p>
+                                </div>
+                            </article>
+                            
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==================== BOCADILLO ==================== -->
                 <section id="bocadillo" class="menu-category mb-40 pt-10" aria-label="Bocadillo Menü">
                     <div class="md:grid md:grid-cols-12 gap-12 relative">
                         <div class="md:col-span-4 mb-12 md:mb-0">
@@ -306,7 +320,8 @@
                         </div>
                         
                         <div class="md:col-span-8 space-y-32">
-                            <!-- Product -->
+                            
+                            <!-- 8. Merguez Marrocan Bocadillo -->
                             <article class="product-card flex flex-col gap-6">
                                 <div class="img-wrapper aspect-[4/3] md:aspect-[16/10]">
                                     <img src="images/Nr.8.JPG" onerror="this.src='https://images.unsplash.com/photo-1619881589316-56c7f9e6b587?auto=format&fit=crop&w=1200&q=80'" alt="Merguez Marrocan Bocadillo" loading="lazy">
@@ -318,17 +333,65 @@
                                 </div>
                                 <div>
                                     <h3 class="text-3xl font-semibold text-brand-light mb-2">Merguez Marrocan Bocadillo</h3>
-                                    <p class="text-brand-gray text-lg leading-relaxed">Saftige Merguez Wurst, knackige Pommes, Salat, Tomate, Karotten, Mais, Zwiebel, Homemade Soße.</p>
+                                    <p class="text-brand-gray text-lg leading-relaxed">Saftige Merguez Wurst, Knackige Pommes, Salat, Tomate, Karotten, Mais, Zwiebel, Homemade Soße</p>
                                 </div>
                             </article>
+
+                            <!-- 9. Chicken Paradies Bocadillo -->
+                            <article class="product-card flex flex-col gap-6">
+                                <div class="img-wrapper aspect-[4/3] md:aspect-[16/10]">
+                                    <img src="images/Nr.9.JPG" onerror="this.src='https://images.unsplash.com/photo-1601050690597-df0568a70950?auto=format&fit=crop&w=1200&q=80'" alt="Chicken Paradies Bocadillo" loading="lazy">
+                                    <div class="absolute bottom-6 right-6 price-badge px-5 py-3 rounded-xl flex items-center gap-6">
+                                        <div class="text-center"><span class="text-brand-gray text-[10px] uppercase tracking-wider block">Single</span><span class="text-brand-light font-medium text-lg">9,90 €</span></div>
+                                        <div class="w-px h-8 bg-brand-gold/30"></div>
+                                        <div class="text-center"><span class="text-brand-gray text-[10px] uppercase tracking-wider block">Menü</span><span class="text-brand-gold font-bold text-lg">14,90 €</span></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h3 class="text-3xl font-semibold text-brand-light mb-2">Chicken Paradies Bocadillo</h3>
+                                    <p class="text-brand-gray text-lg leading-relaxed">Hähnchenfleisch, Knackige Pommes, Salat, Tomate, Karotten, Mais, Zwiebel, Homemade Soße</p>
+                                </div>
+                            </article>
+
+                            <!-- 10. Chicken Crispy Bocadillo -->
+                            <article class="product-card flex flex-col gap-6">
+                                <div class="img-wrapper aspect-[4/3] md:aspect-[16/10]">
+                                    <img src="images/Nr.10.JPG" onerror="this.src='https://images.unsplash.com/photo-1554433607-66b5efe9d304?auto=format&fit=crop&w=1200&q=80'" alt="Chicken Crispy Bocadillo" loading="lazy">
+                                    <div class="absolute bottom-6 right-6 price-badge px-5 py-3 rounded-xl flex items-center gap-6">
+                                        <div class="text-center"><span class="text-brand-gray text-[10px] uppercase tracking-wider block">Single</span><span class="text-brand-light font-medium text-lg">10,50 €</span></div>
+                                        <div class="w-px h-8 bg-brand-gold/30"></div>
+                                        <div class="text-center"><span class="text-brand-gray text-[10px] uppercase tracking-wider block">Menü</span><span class="text-brand-gold font-bold text-lg">15,50 €</span></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h3 class="text-3xl font-semibold text-brand-light mb-2">Chicken Crispy Bocadillo</h3>
+                                    <p class="text-brand-gray text-lg leading-relaxed">Panierter Hähnchenfleisch, Knackige Pommes, Salat, Tomate, Karotten, Mais, Homemade Soße</p>
+                                </div>
+                            </article>
+
+                            <!-- 11. Shrimps Deluxe Bocadillo -->
+                            <article class="product-card flex flex-col gap-6">
+                                <div class="img-wrapper aspect-[4/3] md:aspect-[16/10]">
+                                    <img src="images/Nr.11.JPG" onerror="this.src='https://images.unsplash.com/photo-1559742811-822873691df8?auto=format&fit=crop&w=1200&q=80'" alt="Shrimps Deluxe Bocadillo" loading="lazy">
+                                    <div class="absolute bottom-6 right-6 price-badge px-5 py-3 rounded-xl flex items-center gap-6">
+                                        <div class="text-center"><span class="text-brand-gray text-[10px] uppercase tracking-wider block">Single</span><span class="text-brand-light font-medium text-lg">10,90 €</span></div>
+                                        <div class="w-px h-8 bg-brand-gold/30"></div>
+                                        <div class="text-center"><span class="text-brand-gray text-[10px] uppercase tracking-wider block">Menü</span><span class="text-brand-gold font-bold text-lg">15,90 €</span></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h3 class="text-3xl font-semibold text-brand-light mb-2">Shrimps Deluxe Bocadillo</h3>
+                                    <p class="text-brand-gray text-lg leading-relaxed">Gebratene Shrimps, Knackige Pommes, Salat, Tomate, Zwiebel, Homemade Aioli Soße</p>
+                                </div>
+                            </article>
+
                         </div>
                     </div>
                 </section>
 
-                <!-- Kategorie: CLASSICS -->
-                <section id="classics" class="menu-category pt-10" aria-label="Weitere Klassiker">
+                <!-- ==================== CLASSICS ==================== -->
+                <section id="classics" class="menu-category pt-10 mb-20" aria-label="Weitere Klassiker">
                     <div class="bg-[#1e1e24] rounded-3xl p-8 md:p-16 border border-white/5 relative overflow-hidden">
-                        <!-- Dekorativer Glow -->
                         <div class="absolute -top-24 -right-24 w-64 h-64 bg-brand-gold/10 rounded-full blur-3xl pointer-events-none"></div>
                         
                         <div class="mb-12 text-center">
@@ -337,25 +400,47 @@
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-                            <!-- Classic Item -->
+                            
+                            <!-- 12. Currywurst mit Brot -->
+                            <article class="product-card text-center flex flex-col items-center gap-4">
+                                <div class="w-48 h-48 rounded-full overflow-hidden border-4 border-brand-dark shadow-xl img-wrapper">
+                                    <img src="images/Nr.12.JPG" onerror="this.src='https://images.unsplash.com/photo-1627308595186-e17f0ec689b7?auto=format&fit=crop&w=800&q=80'" alt="Currywurst mit Brot" loading="lazy">
+                                </div>
+                                <h3 class="text-2xl font-semibold text-brand-light">Currywurst mit Brot</h3>
+                                <p class="text-brand-gray text-sm px-4 h-10">Knusprige Currywurst mit würziger Sauce, serviert mit Brot</p>
+                                <span class="text-brand-gold font-medium mt-2 block bg-brand-dark px-4 py-1 rounded-full border border-white/10">6,50 €</span>
+                            </article>
+
+                            <!-- 14. Currywurst mit Pommes -->
+                            <article class="product-card text-center flex flex-col items-center gap-4">
+                                <div class="w-48 h-48 rounded-full overflow-hidden border-4 border-brand-dark shadow-xl img-wrapper">
+                                    <img src="images/Nr.14.JPG" onerror="this.src='https://images.unsplash.com/photo-1627308595229-7830b5e3c834?auto=format&fit=crop&w=800&q=80'" alt="Currywurst mit Pommes" loading="lazy">
+                                </div>
+                                <h3 class="text-2xl font-semibold text-brand-light">Currywurst mit Pommes</h3>
+                                <p class="text-brand-gray text-sm px-4 h-10">Knusprige Currywurst mit Pommes, serviert mit würziger Sauce</p>
+                                <span class="text-brand-gold font-medium mt-2 block bg-brand-dark px-4 py-1 rounded-full border border-white/10">7,90 €</span>
+                            </article>
+
+                            <!-- 15. Crispy Chicken Bowl -->
                             <article class="product-card text-center flex flex-col items-center gap-4">
                                 <div class="w-48 h-48 rounded-full overflow-hidden border-4 border-brand-dark shadow-xl img-wrapper">
                                     <img src="images/Nr.15.JPG" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80'" alt="Crispy Chicken Bowl" loading="lazy">
                                 </div>
                                 <h3 class="text-2xl font-semibold text-brand-light">Crispy Chicken Bowl</h3>
-                                <p class="text-brand-gray text-sm px-4">Panierter Hähnchenfleisch, Salat, Pommes, Soße</p>
-                                <span class="text-brand-gold font-medium mt-2 block">9,90 €</span>
+                                <p class="text-brand-gray text-sm px-4 h-10">Panierter Hähnchenfleisch, Knackiger Salat, Pommes, Homemade Soße</p>
+                                <span class="text-brand-gold font-medium mt-2 block bg-brand-dark px-4 py-1 rounded-full border border-white/10">9,90 €</span>
                             </article>
 
-                            <!-- Classic Item -->
+                            <!-- 16. Bauernsalat mit Feta -->
                             <article class="product-card text-center flex flex-col items-center gap-4">
                                 <div class="w-48 h-48 rounded-full overflow-hidden border-4 border-brand-dark shadow-xl img-wrapper">
                                     <img src="images/Nr.16.JPG" onerror="this.src='https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=800&q=80'" alt="Bauernsalat mit Feta" loading="lazy">
                                 </div>
                                 <h3 class="text-2xl font-semibold text-brand-light">Bauernsalat mit Feta</h3>
-                                <p class="text-brand-gray text-sm px-4">Frischer Salat mit Feta, Oliven, Tomaten und Gurken</p>
-                                <span class="text-brand-gold font-medium mt-2 block">8,90 €</span>
+                                <p class="text-brand-gray text-sm px-4 h-10">Frischer Salat mit Feta, Oliven, Tomaten und Gurken</p>
+                                <span class="text-brand-gold font-medium mt-2 block bg-brand-dark px-4 py-1 rounded-full border border-white/10">8,90 €</span>
                             </article>
+
                         </div>
                     </div>
                 </section>
@@ -363,23 +448,15 @@
             </div>
         </div>
 
-        <!-- Kontakt / Reservierung Formular (DSGVO konform & FormSubmit Anbindung) -->
-        <section class="py-32 px-6 bg-brand-darker relative mt-20 border-t border-white/5">
+        <!-- Kontakt / Reservierung Formular -->
+        <section class="py-32 px-6 bg-brand-darker relative border-t border-white/5">
             <div class="max-w-3xl mx-auto">
                 <div class="text-center mb-16">
                     <h2 class="text-4xl font-serif text-brand-light mb-4">Kontakt & Feedback</h2>
                     <p class="text-brand-gray">Wir freuen uns auf deine Nachricht.</p>
                 </div>
                 
-                <!-- 
-                  FORMSUBMIT.CO Integration
-                  Wenn das Formular gesendet wird, werden die Daten an The3B.support@gmail.com weitergeleitet.
-                -->
-                <form action="https://formsubmit.co/The3B.support@gmail.com" method="POST" class="space-y-6">
-                    
-                    <!-- Deaktiviert Captcha von FormSubmit für ein noch professionelleres Erlebnis (optional) -->
-                    <!-- <input type="hidden" name="_captcha" value="false"> -->
-                    
+                <form action="https://formsubmit.co/the3b.support@gmail.com" method="POST" class="space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label for="name" class="block text-sm font-medium text-brand-gray mb-2">Name *</label>
@@ -395,7 +472,6 @@
                         <textarea id="message" name="message" rows="4" required aria-required="true" class="w-full bg-brand-dark border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-colors" placeholder="Wie können wir helfen?"></textarea>
                     </div>
                     
-                    <!-- DSGVO Checkbox -->
                     <div class="flex items-start">
                         <div class="flex items-center h-5">
                             <input id="gdpr" name="gdpr" type="checkbox" required aria-required="true" class="w-4 h-4 rounded border-gray-600 text-brand-gold bg-brand-dark focus:ring-brand-gold focus:ring-offset-brand-darker">
@@ -406,8 +482,8 @@
                         </div>
                     </div>
 
-                    <!-- Honeypot (Spam-Schutz für FormSubmit) -->
                     <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+                    <input type="hidden" name="_subject" value="Neue Nachricht über die The 3B Website!">
 
                     <button type="submit" class="w-full bg-brand-gold text-brand-darker font-bold py-4 rounded-lg hover:bg-brand-goldhover transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-gold focus-visible:ring-offset-brand-darker">
                         Nachricht absenden
@@ -417,7 +493,7 @@
         </section>
     </main>
 
-    <!-- Footer mit rechtlichen Links -->
+    <!-- Footer -->
     <footer class="bg-[#0a0a0c] border-t border-white/5 pt-20 pb-10 px-6">
         <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
             <div class="md:col-span-2">
@@ -438,8 +514,7 @@
                 <ul class="space-y-3 text-sm text-brand-gray">
                     <li>[Musterstraße 123]</li>
                     <li>[12345 Musterstadt]</li>
-                    <!-- Updated Email Address -->
-                    <li><a href="mailto:The3B.support@gmail.com" class="hover:text-brand-gold transition-colors">The3B.support@gmail.com</a></li>
+                    <li><a href="mailto:the3b.support@gmail.com" class="hover:text-brand-gold transition-colors">the3b.support@gmail.com</a></li>
                     <li>[+49 123 456789]</li>
                 </ul>
             </div>
@@ -450,9 +525,7 @@
         </div>
     </footer>
 
-    <!-- ================= MODALS (Rechtstexte) ================= -->
-    
-    <!-- Impressum Modal -->
+    <!-- Modals (Impressum, Datenschutz, AGB) -->
     <dialog id="modal-impressum" class="bg-brand-dark text-brand-light p-8 rounded-2xl w-[90%] max-w-2xl border border-white/10 m-auto mt-20 md:mt-auto">
         <div class="flex justify-between items-start mb-6">
             <h2 class="text-3xl font-serif text-brand-gold">Impressum</h2>
@@ -464,13 +537,12 @@
             <p><strong>Angaben gemäß § 5 DDG</strong></p>
             <p>[Vorname Name / Firmenname]<br>[Straße Hausnummer]<br>[PLZ Ort]</p>
             <p><strong>Vertreten durch:</strong><br>[Name des Vertretungsberechtigten]</p>
-            <p><strong>Kontakt:</strong><br>Telefon: [+49 (0) 123 44 55 66]<br>E-Mail: The3B.support@gmail.com</p>
+            <p><strong>Kontakt:</strong><br>Telefon: [+49 (0) 123 44 55 66]<br>E-Mail: the3b.support@gmail.com</p>
             <p><strong>Umsatzsteuer-ID:</strong><br>Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz:<br>[DE XXX XXX XXX]</p>
-            <p><strong>Verbraucherstreitbeilegung/Universalschlichtungsstelle:</strong><br>Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+            <p><strong>Verbraucherstreitbeilegung:</strong><br>Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
         </div>
     </dialog>
 
-    <!-- Datenschutz Modal -->
     <dialog id="modal-datenschutz" class="bg-brand-dark text-brand-light p-8 rounded-2xl w-[90%] max-w-2xl border border-white/10 m-auto mt-20 md:mt-auto">
         <div class="flex justify-between items-start mb-6">
             <h2 class="text-3xl font-serif text-brand-gold">Datenschutzerklärung</h2>
@@ -480,13 +552,12 @@
         </div>
         <div class="text-brand-gray text-sm space-y-4 max-h-[60vh] overflow-y-auto pr-4">
             <p><strong>1. Datenschutz auf einen Blick</strong><br>Allgemeine Hinweise: Die folgenden Hinweise geben einen einfachen Überblick darüber, was mit Ihren personenbezogenen Daten passiert, wenn Sie diese Website besuchen...</p>
-            <p><em>(Hinweis: Dies ist ein Platzhalter. Hier muss ein vollständiger, auf deine Website zugeschnittener Text eingefügt werden, der Themen wie Hosting, Server-Log-Files, Kontaktformular etc. abdeckt.)</em></p>
+            <p><em>(Hinweis: Dies ist ein Platzhalter. Hier muss ein vollständiger Text eingefügt werden.)</em></p>
             <p><strong>Verantwortliche Stelle:</strong><br>[Name]<br>[Adresse]</p>
-            <p><strong>Kontakt für Datenschutzanfragen:</strong><br>The3B.support@gmail.com</p>
+            <p><strong>Kontakt für Datenschutzanfragen:</strong><br>the3b.support@gmail.com</p>
         </div>
     </dialog>
     
-    <!-- AGB Modal (Optional) -->
     <dialog id="modal-agb" class="bg-brand-dark text-brand-light p-8 rounded-2xl w-[90%] max-w-2xl border border-white/10 m-auto mt-20 md:mt-auto">
         <div class="flex justify-between items-start mb-6">
             <h2 class="text-3xl font-serif text-brand-gold">AGB</h2>
@@ -495,35 +566,32 @@
             </button>
         </div>
         <div class="text-brand-gray text-sm space-y-4">
-            <p>[Platzhalter für Allgemeine Geschäftsbedingungen, sofern für Online-Bestellungen oder Ähnliches relevant.]</p>
+            <p>[Platzhalter für Allgemeine Geschäftsbedingungen, sofern für Online-Bestellungen relevant.]</p>
         </div>
     </dialog>
 
-
-    <!-- ================= COOKIE CONSENT BANNER ================= -->
+    <!-- Cookie Banner -->
     <div id="cookie-banner" class="fixed bottom-0 left-0 w-full bg-[#18181b]/95 backdrop-blur-md border-t border-white/10 p-6 z-[100] transform translate-y-full transition-transform duration-500 ease-in-out hidden" role="dialog" aria-live="polite">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
             <div class="text-sm text-brand-gray md:max-w-2xl">
                 <strong class="text-white block mb-2">Wir respektieren deine Privatsphäre</strong>
-                Wir verwenden Cookies, um die grundlegende Funktionalität der Website sicherzustellen (Notwendig). Optionale Cookies für Analysezwecke oder Marketing setzen wir auf dieser reinen Präsentationsseite bewusst <strong>nicht</strong> ein. Weitere Informationen findest du in unserer <button onclick="document.getElementById('modal-datenschutz').showModal()" class="text-brand-gold hover:underline">Datenschutzerklärung</button>.
+                Wir verwenden Cookies, um die grundlegende Funktionalität der Website sicherzustellen. Weitere Informationen findest du in unserer <button onclick="document.getElementById('modal-datenschutz').showModal()" class="text-brand-gold hover:underline">Datenschutzerklärung</button>.
             </div>
             <div class="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-                <button id="cookie-accept" class="bg-brand-gold text-brand-darker font-bold py-2 px-6 rounded-lg hover:bg-brand-goldhover transition-colors whitespace-nowrap focus:ring-2 focus:ring-white">
+                <button id="cookie-accept" class="bg-brand-gold text-brand-darker font-bold py-2 px-6 rounded-lg hover:bg-brand-goldhover transition-colors whitespace-nowrap">
                     Einverstanden
                 </button>
             </div>
         </div>
     </div>
 
-
-    <!-- ================= SCRIPTS & ANIMATIONEN ================= -->
+    <!-- Scripts -->
     <script>
-        // Fallback-Logik für Logo im Header, falls Bild nicht lädt
         document.querySelector('.w-10 img').addEventListener('error', function() {
             document.getElementById('logo-fallback').style.display = 'block';
         });
 
-        // 1. Lenis Smooth Scrolling
+        // Lenis Smooth Scrolling (Repariert: Konflikt mit CSS entfernt)
         const lenis = new Lenis({
             duration: 1.2,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -538,15 +606,13 @@
         }
         requestAnimationFrame(raf);
 
-        // 2. Cookie Banner Logik (DSGVO Basis)
+        // Cookie Logik
         document.addEventListener("DOMContentLoaded", () => {
             const banner = document.getElementById('cookie-banner');
             const acceptBtn = document.getElementById('cookie-accept');
             
-            // Prüfen ob Consent schon erteilt wurde
             if (!localStorage.getItem('3b_cookie_consent')) {
                 banner.classList.remove('hidden');
-                // Timeout für sanftes hochgleiten
                 setTimeout(() => banner.classList.remove('translate-y-full'), 100);
             }
 
@@ -561,18 +627,16 @@
             const banner = document.getElementById('cookie-banner');
             banner.classList.remove('hidden');
             setTimeout(() => banner.classList.remove('translate-y-full'), 10);
-            localStorage.removeItem('3b_cookie_consent'); // Resets consent to show banner again
+            localStorage.removeItem('3b_cookie_consent');
         }
 
-        // 3. GSAP Animationen (Der Apple "Fokus" Effekt)
+        // GSAP Scroll Animationen
         gsap.registerPlugin(ScrollTrigger);
 
-        // Verbinde GSAP mit Lenis
         lenis.on('scroll', ScrollTrigger.update);
         gsap.ticker.add((time) => { lenis.raf(time * 1000) });
         gsap.ticker.lagSmoothing(0, 0);
 
-        // Category Line Animation
         gsap.utils.toArray('.anim-line').forEach(line => {
             gsap.to(line, {
                 scaleX: 1,
@@ -585,24 +649,20 @@
             });
         });
 
-        // Der Premium Scrollytelling Effekt für die Produkte
         gsap.utils.toArray('.product-card').forEach(card => {
             const img = card.querySelector('img');
             
-            // Karte fokussiert sich beim Erreichen der Bildschirmmitte
             ScrollTrigger.create({
                 trigger: card,
-                start: "top 85%", // Aktiviert, wenn Karte unten im Bild ankommt
-                end: "bottom 15%", // Deaktiviert, wenn sie oben rausscrollt
+                start: "top 85%", 
+                end: "bottom 15%", 
                 toggleClass: "is-active",
-                markers: false 
             });
 
-            // Sanfter Parallax Effekt für das Bild in der Karte
             if(img) {
                 gsap.to(img, {
                     y: "15%",
-                    scale: 1, // Startet im CSS bei 1.1, zoomt also leicht raus
+                    scale: 1, 
                     ease: "none",
                     scrollTrigger: {
                         trigger: card,
