@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>The 3B | Premium Products</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- GSAP für weiche, flüssige Transitions -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <!-- Google Fonts: Inter für Lesbarkeit, Playfair Display für elegante Akzente -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            black: '#030303',
+                            dark: '#0a0a0a',
+                            gold: '#D4AF37',
+                            goldhover: '#b5952f',
+                            green: '#2F855A',
+                            darkgreen: '#1b4d34',
+                            greenhover: '#226343',
+                            white: '#ffffff',
+                            gray: '#a1a1aa'
+                        }
+                    },
+                    boxShadow: {
+                        'main-element': '0 30px 60px rgba(0, 0, 0, 0.9), 0 10px 30px rgba(212, 175, 55, 0.15)',
+                        'card': '0 0 0 1px rgba(212, 175, 55, 0.2), 0 20px 50px rgba(0, 0, 0, 0.9)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Blockiert das native Browser-Scrollen für perfekte Swipe-Erkennung */
+        html, body {
+            background-color: #030303;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; 
+            touch-action: none; 
+            overscroll-behavior: none;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ==========================================
+           FUTURISTISCHER & ELEGANTER HINTERGRUND
+           ========================================== */
+        
+        .bg-grid {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(to right, rgba(212, 175, 55, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(212, 175, 55, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
+            -webkit-mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
+            z-index: 1;
+        }
+
+        .bg-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.5;
+            animation: pulse-orb 15s ease-in-out infinite alternate;
+            z-index: 0;
+        }
+        .orb-gold {
+            background-color: #D4AF37;
+            width: 45vw; height: 45vw;
+            top: -10%; left: -10%;
+        }
+        .orb-green {
+            background-color: #1b4d34;
+            width: 55vw; height: 55vw;
+            bottom: -20%; right: -15%;
+            animation-delay: -7s;
+        }
+
+        @keyframes pulse-orb {
+            0% { transform: scale(1) translate(0, 0); opacity: 0.4; }
+            100% { transform: scale(1.2) translate(5%, 5%); opacity: 0.6; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(-8px); }
+            50% { transform: translateY(8px); }
+        }
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        /* Hintergrundtext, leicht verkleinert um perfekt oben reinzupassen */
+        .bg-text {
+            font-size: clamp(50px, 12vw, 160px); 
+            line-height: 0.8;
+            color: rgba(212, 175, 55, 0.08); 
+            -webkit-text-stroke: 2px rgba(212, 175, 55, 0.35); 
+            text-shadow: 0 0 40px rgba(212, 175, 55, 0.15); 
+            user-select: none;
+            z-index: 2;
+        }
+        
+        .product-mask {
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid rgba(212, 175, 55, 0.4);
+            box-shadow: 0 0 40px rgba(0,0,0,0.9) inset;
+        }
+
+        .nav-dot { transition: all 0.3s ease; }
+        .nav-dot.active {
+            background-color: #D4AF37;
+            width: 24px;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.8);
+        }
+
+        dialog::backdrop {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body class="p-0 md:p-6 lg:p-8 box-border flex items-center justify-center font-sans">
+
+    <!-- Haupt-Container -->
+    <main id="app-container" class="relative w-full h-full md:rounded-[32px] overflow-hidden shadow-card bg-brand-black flex flex-col">
+        
+        <!-- Premium Hintergrund Effekte -->
+        <div class="bg-orb orb-gold"></div>
+        <div class="bg-orb orb-green"></div>
+        <div class="bg-grid"></div>
+
+        <!-- Header -->
+        <header class="absolute top-0 left-0 w-full p-5 md:p-6 flex justify-between items-center z-50 pointer-events-auto">
+            <!-- Klickbarer Logo-Bereich für Refresh -->
+            <div class="flex items-center gap-3 cursor-pointer group" onclick="location.reload();" title="Zurück zum Start">
+                <div class="w-10 h-10 rounded-full border border-brand-gold/50 flex items-center justify-center overflow-hidden bg-brand-dark shadow-[0_0_15px_rgba(212,175,55,0.2)] group-hover:scale-105 transition-transform">
+                    <img src="images/Logo.png" alt="The 3B Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" class="w-full h-full object-cover">
+                    <span class="text-brand-gold font-black text-sm hidden">3B</span>
+                </div>
+                <span class="text-brand-white text-base md:text-lg tracking-wide font-black">The <span class="text-brand-gold">3B</span></span>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <span id="product-counter" class="text-brand-gold/80 text-xs font-medium tracking-[0.2em] hidden md:block">01 / 15</span>
+                <a href="images/Speisekarte.pdf" download class="text-[9px] md:text-xs font-bold tracking-[0.1em] uppercase text-brand-black bg-brand-gold border border-brand-gold hover:bg-brand-goldhover px-3 md:px-4 py-2 rounded-full transition-colors shadow-[0_0_15px_rgba(212,175,55,0.3)]">
+                    Speisekarte
+                </a>
+            </div>
+        </header>
+
+        <!-- Container für alle Inhalte -->
+        <!-- WICHTIG: Hier wurde pt-[20vh] (Mobile) und pt-[22vh] (Desktop) hinzugefügt, um alles nach unten zu schieben -->
+        <section class="relative z-10 w-full h-full flex flex-col pt-[20vh] md:pt-[22vh] pb-16 md:pb-12">
+            
+            <!-- Hintergrund Text (Ist jetzt fixiert ganz oben im Screen, pt-[10vh], über dem Produktbild) -->
+            <div class="absolute top-0 left-0 w-full flex items-start justify-center pt-[10vh] md:pt-[8vh] pointer-events-none">
+                <h1 id="bg-category" class="bg-text font-black tracking-tighter uppercase whitespace-nowrap">BURGER</h1>
+            </div>
+
+            <!-- ==========================================
+                 PRODUKT ANSICHT (Wird für Produkte 1-14 gezeigt)
+                 ========================================== -->
+            <!-- flex-grow sorgt dafür, dass sich der restliche Platz gut aufteilt -->
+            <div id="product-view" class="w-full h-full flex-grow flex flex-col md:grid md:grid-cols-12 items-center justify-between md:justify-center px-5 md:px-12">
+                
+                <!-- Mitte: Produktbild & Nummer -->
+                <div class="w-full flex justify-center items-center order-1 md:order-2 md:col-span-5 flex-shrink-0 relative z-20">
+                    <div class="relative animate-float w-44 h-44 sm:w-56 sm:h-56 md:w-72 md:h-72 lg:w-[380px] lg:h-[380px]">
+                        <img id="prod-img" src="" alt="Produkt" class="w-full h-full product-mask shadow-main-element transition-opacity duration-300">
+                        
+                        <!-- Nummer Badge -->
+                        <div class="absolute -top-2 -right-2 md:top-2 md:-right-2 w-12 h-12 md:w-16 md:h-16 rounded-full bg-brand-gold border-4 border-brand-black flex items-center justify-center shadow-lg z-20">
+                            <span class="text-brand-black font-black text-sm md:text-xl tracking-tighter">
+                                <span class="text-[8px] md:text-[10px] block -mb-1 text-center font-sans tracking-widest">NR</span>
+                                <span id="prod-nr" class="block text-center font-black">1</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Links: Info -->
+                <div class="w-full order-2 md:order-1 md:col-span-4 flex flex-col text-center md:text-left flex-shrink-0 z-20 mt-4 md:mt-0">
+                    <div class="mb-2 md:mb-4 text-brand-gold font-bold tracking-widest text-[10px] md:text-xs uppercase flex items-center justify-center md:justify-start gap-3">
+                        <span class="w-8 h-[2px] bg-brand-gold hidden md:block"></span>
+                        <span id="cat-label">KATEGORIE</span>
+                    </div>
+                    <!-- Moderne Schriftart für Produkt-Titel -->
+                    <h2 id="prod-title" class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-brand-white mb-2 md:mb-4 leading-tight drop-shadow-md">Lade Produkt...</h2>
+                    <span class="text-[9px] md:text-[10px] font-medium tracking-[2px] text-brand-gold/60 uppercase block mb-1 md:mb-2">ZUTATEN & INFOS</span>
+                    <p id="prod-desc" class="text-xs sm:text-sm md:text-base text-brand-gray/90 leading-relaxed min-h-[40px] md:min-h-[80px]">Details werden geladen...</p>
+                </div>
+
+                <!-- Rechts: Preis (ohne Button) -->
+                <div class="w-full order-3 md:order-3 md:col-span-3 flex flex-col items-center md:items-end text-center md:text-right flex-shrink-0 z-20 mt-auto md:mt-0 mb-6 md:mb-0">
+                    
+                    <div class="w-full bg-brand-dark/80 backdrop-blur-md p-4 md:p-6 rounded-[20px] md:rounded-[24px] border border-brand-gold/20 shadow-2xl">
+                        <span class="text-[9px] md:text-[10px] font-medium tracking-[2px] text-brand-gold/60 uppercase block mb-3 md:mb-5 text-center">PREIS</span>
+                        
+                        <div class="flex justify-evenly items-center w-full" id="price-container">
+                            <div class="text-center" id="price-box-single">
+                                <span id="price-label-single" class="text-[9px] md:text-[10px] text-brand-gray uppercase tracking-wider block mb-1">Single</span>
+                                <span id="price-val-single" class="text-brand-white font-black text-xl sm:text-2xl md:text-3xl">0,00 €</span>
+                            </div>
+                            
+                            <div id="price-divider" class="w-px h-10 md:h-12 bg-brand-gold/20 mx-2"></div>
+                            
+                            <div class="text-center" id="price-box-menu">
+                                <span class="text-[9px] md:text-[10px] text-brand-gold uppercase tracking-wider block mb-1">Menü</span>
+                                <span id="price-val-menu" class="text-brand-gold font-black text-xl sm:text-2xl md:text-3xl drop-shadow-[0_0_10px_rgba(212,175,55,0.3)]">0,00 €</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 FOOTER ANSICHT (Wird auf Slide 15 gezeigt)
+                 ========================================== -->
+            <!-- WICHTIG: pb-24 und md:pb-20 sorgen dafür, dass die Buttons sehr weit oben über den Nav-Punkten stehen -->
+            <div id="footer-view" class="hidden w-full h-full flex-col items-center justify-center px-5 md:px-12 z-20 text-center relative pb-24 md:pb-20">
+                <div class="w-24 h-24 md:w-32 md:h-32 rounded-full border-2 border-brand-gold/50 flex items-center justify-center overflow-hidden bg-brand-dark shadow-[0_0_30px_rgba(212,175,55,0.3)] mb-6 md:mb-8 mt-auto md:mt-0">
+                    <img src="images/Logo.png" alt="The 3B Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" class="w-full h-full object-cover">
+                    <span class="text-brand-gold font-black text-2xl hidden">3B</span>
+                </div>
+                
+                <h2 class="text-3xl md:text-5xl font-black text-brand-white mb-4 drop-shadow-md">Vielen Dank für deinen Besuch!</h2>
+                <p class="text-brand-gray text-sm md:text-base max-w-md mx-auto mb-10 leading-relaxed">Wir freuen uns darauf, dich bald bei uns begrüßen zu dürfen. Frische Zutaten, Premium Qualität & echter Geschmack.</p>
+                
+                <!-- Kontakt Infos -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 w-full max-w-3xl mb-12">
+                    <div class="bg-brand-dark/80 backdrop-blur-md p-5 md:p-6 rounded-2xl border border-brand-gold/20">
+                        <span class="block text-[10px] text-brand-gold uppercase tracking-widest mb-2">Adresse</span>
+                        <span class="block text-brand-white text-sm">Musterstraße 123<br>12345 Musterstadt</span>
+                    </div>
+                    <div class="bg-brand-dark/80 backdrop-blur-md p-5 md:p-6 rounded-2xl border border-brand-gold/20">
+                        <span class="block text-[10px] text-brand-gold uppercase tracking-widest mb-2">Kontakt</span>
+                        <span class="block text-brand-white text-sm">+49 123 456789<br>info@the3b.de</span>
+                    </div>
+                    <div class="bg-brand-dark/80 backdrop-blur-md p-5 md:p-6 rounded-2xl border border-brand-gold/20">
+                        <span class="block text-[10px] text-brand-gold uppercase tracking-widest mb-2">Öffnungszeiten</span>
+                        <span class="block text-brand-white text-sm">Mo-Sa: 11:00 - 22:00<br>So: Geschlossen</span>
+                    </div>
+                </div>
+
+                <!-- Legal Buttons (Abstand zum unteren Rand gesichert durch das Padding des Footers) -->
+                <div class="flex flex-wrap justify-center gap-4 relative z-30 mt-auto md:mt-0">
+                    <button onclick="document.getElementById('modal-impressum').showModal()" class="text-[10px] md:text-xs tracking-widest uppercase text-brand-gray hover:text-brand-gold border border-brand-gray/30 hover:border-brand-gold px-5 py-3 rounded-full transition-all">Impressum</button>
+                    <button onclick="document.getElementById('modal-datenschutz').showModal()" class="text-[10px] md:text-xs tracking-widest uppercase text-brand-gray hover:text-brand-gold border border-brand-gray/30 hover:border-brand-gold px-5 py-3 rounded-full transition-all">Datenschutz</button>
+                    <button onclick="document.getElementById('modal-agb').showModal()" class="text-[10px] md:text-xs tracking-widest uppercase text-brand-gray hover:text-brand-gold border border-brand-gray/30 hover:border-brand-gold px-5 py-3 rounded-full transition-all">AGB</button>
+                </div>
+            </div>
+            
+        </section>
+
+        <!-- Navigation Dots (15 Punkte am untersten Rand fixiert) -->
+        <div id="nav-dots" class="absolute bottom-4 md:bottom-6 w-full flex justify-center gap-1.5 md:gap-2 z-50 px-4 flex-wrap">
+            <!-- Wird per JS befüllt -->
+        </div>
+
+    </main>
+
+    <!-- ==========================================
+         MODALS (Pop-ups für Rechtliches)
+         ========================================== -->
+    <dialog id="modal-impressum" class="bg-brand-dark/95 text-white p-8 rounded-[24px] w-[90%] max-w-2xl border border-brand-gold/30 shadow-2xl m-auto backdrop-blur-xl z-[100]">
+        <div class="flex justify-between items-start mb-6 border-b border-brand-gold/20 pb-4">
+            <h2 class="text-2xl font-black text-brand-gold">Impressum</h2>
+            <button onclick="this.closest('dialog').close()" class="text-brand-gray hover:text-white p-2" aria-label="Schließen">✕</button>
+        </div>
+        <div class="text-brand-gray text-sm space-y-4 max-h-[60vh] overflow-y-auto pr-2">
+            <p><strong>Angaben gemäß § 5 TMG</strong></p>
+            <p>The 3B Restaurant<br>Musterstraße 123<br>12345 Musterstadt</p>
+            <p><strong>Vertreten durch:</strong><br>Max Mustermann</p>
+            <p><strong>Kontakt:</strong><br>Telefon: +49 123 456789<br>E-Mail: info@the3b.de</p>
+            <p>Hier kannst du deinen vollständigen Impressumstext einfügen.</p>
+        </div>
+    </dialog>
+
+    <dialog id="modal-datenschutz" class="bg-brand-dark/95 text-white p-8 rounded-[24px] w-[90%] max-w-2xl border border-brand-gold/30 shadow-2xl m-auto backdrop-blur-xl z-[100]">
+        <div class="flex justify-between items-start mb-6 border-b border-brand-gold/20 pb-4">
+            <h2 class="text-2xl font-black text-brand-gold">Datenschutz</h2>
+            <button onclick="this.closest('dialog').close()" class="text-brand-gray hover:text-white p-2" aria-label="Schließen">✕</button>
+        </div>
+        <div class="text-brand-gray text-sm space-y-4 max-h-[60vh] overflow-y-auto pr-2">
+            <p><strong>1. Datenschutz auf einen Blick</strong></p>
+            <p>Allgemeine Hinweise: Die folgenden Hinweise geben einen einfachen Überblick darüber, was mit Ihren personenbezogenen Daten passiert, wenn Sie unsere Website besuchen.</p>
+            <p>Hier kannst du deine vollständige Datenschutzerklärung einfügen.</p>
+        </div>
+    </dialog>
+
+    <dialog id="modal-agb" class="bg-brand-dark/95 text-white p-8 rounded-[24px] w-[90%] max-w-2xl border border-brand-gold/30 shadow-2xl m-auto backdrop-blur-xl z-[100]">
+        <div class="flex justify-between items-start mb-6 border-b border-brand-gold/20 pb-4">
+            <h2 class="text-2xl font-black text-brand-gold">AGB</h2>
+            <button onclick="this.closest('dialog').close()" class="text-brand-gray hover:text-white p-2" aria-label="Schließen">✕</button>
+        </div>
+        <div class="text-brand-gray text-sm space-y-4 max-h-[60vh] overflow-y-auto pr-2">
+            <p><strong>Allgemeine Geschäftsbedingungen</strong></p>
+            <p>Hier kannst du deine AGBs für Bestellungen oder Reservierungen einfügen.</p>
+        </div>
+    </dialog>
+
+    <script>
+        // --- 14 PRODUKTE + 1 FOOTER SEITE ---
+        const products = [
+            { nr: "1", cat: "BURGER", name: "Iconic Smash Burger", desc: "2 x Rindfleischpatty, Cheddar Käse, Karamellisierte Zwiebeln, Homemade Soße", priceS: "8,90 €", priceM: "13,90 €", img: "images/Nr.1.JPG", fb: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd" },
+            { nr: "2", cat: "BURGER", name: "Super Spicy Burger", desc: "2 x Rindfleischpatty, Cheddar Käse, Karamellisierte Zwiebeln, Jalapeños, Scharfe Homemade Soße", priceS: "9,50 €", priceM: "14,50 €", img: "images/Nr.2.JPG", fb: "https://images.unsplash.com/photo-1586816001966-79b736744398" },
+            { nr: "3", cat: "BURGER", name: "Chicken Paradies Burger", desc: "Gegrilltes Hähnchenfleisch, Karamellisierte Zwiebeln, Homemade Soße", priceS: "8,50 €", priceM: "13,50 €", img: "images/Nr.3.JPG", fb: "https://images.unsplash.com/photo-1615719413546-198b25453f85" },
+            { nr: "4", cat: "BURGER", name: "Chicken Crispy Burger", desc: "Panierter Hähnchenfleisch, Cheddar Käse, Homemade Soße", priceS: "9,90 €", priceM: "14,90 €", img: "images/Nr.4.JPG", fb: "https://images.unsplash.com/photo-1550547660-d9450f859349" },
+            { nr: "6", cat: "BURRITO", name: "Chicken Paradies Burrito", desc: "Hähnchenfleisch, Knackige Pommes, Cheddar Käse, Homemade Soße", priceS: "8,90 €", priceM: "13,90 €", img: "images/Nr.6.JPG", fb: "https://images.unsplash.com/photo-1626700051175-6818013e1d4f" },
+            { nr: "7", cat: "BURRITO", name: "Chicken Spicy Burrito", desc: "Hähnchenfleisch, Knackige Pommes, Jalapeños, Cheddar Käse, Scharfe Homemade Soße", priceS: "9,50 €", priceM: "14,50 €", img: "images/Nr.7.JPG", fb: "https://images.unsplash.com/photo-1566846663365-d41a79fa4577" },
+            { nr: "8", cat: "BOCADILLO", name: "Merguez Marrocan Bocadillo", desc: "Saftige Merguez Wurst, Knackige Pommes, Salat, Tomate, Karotten, Mais, Zwiebel, Homemade Soße", priceS: "10,50 €", priceM: "15,50 €", img: "images/Nr.8.JPG", fb: "https://images.unsplash.com/photo-1619881589316-56c7f9e6b587" },
+            { nr: "9", cat: "BOCADILLO", name: "Chicken Paradies Bocadillo", desc: "Hähnchenfleisch, Knackige Pommes, Salat, Tomate, Karotten, Mais, Zwiebel, Homemade Soße", priceS: "9,90 €", priceM: "14,90 €", img: "images/Nr.9.JPG", fb: "https://images.unsplash.com/photo-1601050690597-df0568a70950" },
+            { nr: "10", cat: "BOCADILLO", name: "Chicken Crispy Bocadillo", desc: "Panierter Hähnchenfleisch, Knackige Pommes, Salat, Tomate, Karotten, Mais, Homemade Soße", priceS: "10,50 €", priceM: "15,50 €", img: "images/Nr.10.JPG", fb: "https://images.unsplash.com/photo-1554433607-66b5efe9d304" },
+            { nr: "11", cat: "BOCADILLO", name: "Shrimps Deluxe Bocadillo", desc: "Gebratene Shrimps, Knackige Pommes, Salat, Tomate, Zwiebel, Homemade Aioli Soße", priceS: "10,90 €", priceM: "15,90 €", img: "images/Nr.11.JPG", fb: "https://images.unsplash.com/photo-1559742811-822873691df8" },
+            { nr: "12", cat: "CLASSICS", name: "Currywurst mit Brot", desc: "Knusprige Currywurst mit würziger Sauce, serviert mit Brot", priceS: "6,50 €", priceM: null, img: "images/Nr.12.JPG", fb: "https://images.unsplash.com/photo-1627308595186-e17f0ec689b7" },
+            { nr: "14", cat: "CLASSICS", name: "Currywurst mit Pommes", desc: "Knusprige Currywurst mit Pommes, serviert mit würziger Sauce", priceS: "7,90 €", priceM: null, img: "images/Nr.14.JPG", fb: "https://images.unsplash.com/photo-1627308595229-7830b5e3c834" },
+            { nr: "15", cat: "CLASSICS", name: "Crispy Chicken Bowl", desc: "Panierter Hähnchenfleisch, Knackiger Salat, Pommes, Homemade Soße", priceS: "9,90 €", priceM: null, img: "images/Nr.15.JPG", fb: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c" },
+            { nr: "16", cat: "CLASSICS", name: "Bauernsalat mit Feta", desc: "Frischer Salat mit Feta, Oliven, Tomaten und Gurken", priceS: "8,90 €", priceM: null, img: "images/Nr.16.JPG", fb: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd" },
+            { isFooter: true, cat: "THE 3B" }
+        ];
+
+        const totalItems = products.length; // 15
+        let currentIndex = 0;
+        let isAnimating = false;
+
+        const els = {
+            bgCat: document.getElementById('bg-category'),
+            prodView: document.getElementById('product-view'),
+            footerView: document.getElementById('footer-view'),
+            
+            catLabel: document.getElementById('cat-label'),
+            title: document.getElementById('prod-title'),
+            desc: document.getElementById('prod-desc'),
+            img: document.getElementById('prod-img'),
+            nr: document.getElementById('prod-nr'),
+            priceSingleLabel: document.getElementById('price-label-single'),
+            priceSingleVal: document.getElementById('price-val-single'),
+            priceMenuVal: document.getElementById('price-val-menu'),
+            priceDivider: document.getElementById('price-divider'),
+            priceBoxMenu: document.getElementById('price-box-menu'),
+            counter: document.getElementById('product-counter')
+        };
+
+        // Navigation Dots
+        const dotContainer = document.getElementById('nav-dots');
+        for(let i=0; i<totalItems; i++) {
+            const dot = document.createElement('button');
+            dot.className = `nav-dot h-1.5 md:h-2 rounded-full ${i === 0 ? 'active' : 'w-3 md:w-5 bg-white/20 hover:bg-brand-gold/50'}`;
+            dot.onclick = () => changeProduct(i);
+            dotContainer.appendChild(dot);
+        }
+
+        updateDOM(0);
+        
+        gsap.from([els.bgCat], { y: 50, opacity: 0, duration: 1, ease: "power3.out" });
+        gsap.from('#product-view', { scale: 0.95, y: 30, opacity: 0, duration: 0.8, ease: "power2.out", delay: 0.2 });
+
+        function updateDOM(index) {
+            const p = products[index];
+            els.bgCat.innerText = p.cat;
+            els.counter.innerText = `${(index + 1).toString().padStart(2, '0')} / ${totalItems}`;
+
+            if (p.isFooter) {
+                els.prodView.classList.add('hidden');
+                els.footerView.classList.remove('hidden');
+                els.footerView.classList.add('flex');
+            } 
+            else {
+                els.prodView.classList.remove('hidden');
+                els.footerView.classList.add('hidden');
+                els.footerView.classList.remove('flex');
+
+                els.catLabel.innerText = p.cat;
+                els.title.innerText = p.name;
+                els.desc.innerText = p.desc;
+                els.nr.innerText = p.nr;
+                
+                if(p.priceM) {
+                    els.priceSingleLabel.innerText = "SINGLE";
+                    els.priceSingleVal.innerText = p.priceS;
+                    els.priceMenuVal.innerText = p.priceM;
+                    els.priceDivider.style.display = "block";
+                    els.priceBoxMenu.style.display = "block";
+                } else {
+                    els.priceSingleLabel.innerText = "PORTION";
+                    els.priceSingleVal.innerText = p.priceS;
+                    els.priceDivider.style.display = "none";
+                    els.priceBoxMenu.style.display = "none";
+                }
+
+                els.img.src = p.img;
+                els.img.onerror = () => { els.img.src = `${p.fb}?auto=format&fit=crop&w=800&q=80`; };
+            }
+            
+            const dots = dotContainer.children;
+            for(let i=0; i<dots.length; i++) {
+                if(i === index) {
+                    dots[i].classList.add('active');
+                    dots[i].classList.remove('w-3', 'md:w-5', 'bg-white/20');
+                } else {
+                    dots[i].classList.remove('active');
+                    dots[i].classList.add('w-3', 'md:w-5', 'bg-white/20');
+                }
+            }
+        }
+
+        function changeProduct(nextIndex) {
+            if (nextIndex === currentIndex || isAnimating) return;
+            if (nextIndex < 0 || nextIndex >= totalItems) return;
+            
+            isAnimating = true;
+            const dir = nextIndex > currentIndex ? 1 : -1;
+
+            const activeView = products[currentIndex].isFooter ? els.footerView : els.prodView;
+
+            // Altes Element ausblenden
+            gsap.to([activeView, els.bgCat], { 
+                y: -20 * dir, opacity: 0, duration: 0.25, ease: "power1.inOut" 
+            });
+
+            setTimeout(() => {
+                updateDOM(nextIndex);
+                currentIndex = nextIndex;
+
+                const newView = products[currentIndex].isFooter ? els.footerView : els.prodView;
+
+                gsap.set([newView, els.bgCat], { y: 20 * dir, opacity: 0 });
+
+                // Neues Element einblenden
+                gsap.to([newView, els.bgCat], { 
+                    y: 0, opacity: 1, duration: 0.4, ease: "power2.out", stagger: 0.05 
+                });
+
+                setTimeout(() => { isAnimating = false; }, 400); 
+            }, 250);
+        }
+
+        // ==========================================
+        // JS SCROLL & SWIPE LOGIK
+        // ==========================================
+        
+        window.addEventListener('wheel', (e) => {
+            // Verhindert Scrollen, wenn Modals offen sind
+            if (document.querySelector('dialog[open]')) return;
+            if (isAnimating) return;
+            
+            if (e.deltaY > 15) {
+                changeProduct(currentIndex + 1);
+            } else if (e.deltaY < -15) {
+                changeProduct(currentIndex - 1);
+            }
+        }, { passive: true });
+
+        let startY = 0;
+        
+        window.addEventListener('touchstart', (e) => {
+            if (document.querySelector('dialog[open]')) return;
+            startY = e.touches[0].clientY;
+        }, { passive: true });
+
+        window.addEventListener('touchend', (e) => {
+            if (document.querySelector('dialog[open]')) return;
+            if (isAnimating) return;
+            
+            let endY = e.changedTouches[0].clientY;
+            let diffY = startY - endY; 
+
+            if (diffY > 40) {
+                changeProduct(currentIndex + 1);
+            } else if (diffY < -40) {
+                changeProduct(currentIndex - 1);
+            }
+        }, { passive: true });
+
+    </script>
+</body>
+</html>
+
+
