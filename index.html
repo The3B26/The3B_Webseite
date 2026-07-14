@@ -110,8 +110,8 @@
            3D ELEMENTE & TYPOGRAFIE
            ========================================== */
         @keyframes float {
-            0%, 100% { transform: translateY(-8px); }
-            50% { transform: translateY(8px); }
+            0%, 100% { transform: translateY(-10px); }
+            50% { transform: translateY(10px); }
         }
         .animate-float {
             animation: float 4s ease-in-out infinite;
@@ -130,7 +130,7 @@
         
         /* Perspektive für den 3D-Tilt-Effekt aktivieren */
         #ui-center {
-            perspective: 1000px;
+            perspective: 1200px;
         }
         #prod-img-wrapper {
             will-change: transform;
@@ -197,14 +197,19 @@
                  ========================================== -->
             <div id="product-view" class="w-full h-full flex-grow flex flex-col md:grid md:grid-cols-12 items-center justify-between md:justify-center px-5 md:px-12">
                 
-                <!-- Mitte: Produktbild & Nummer -->
+                <!-- Mitte: RIESIGES Produktbild & Nummer -->
                 <div id="ui-center" class="w-full flex justify-center items-center order-1 md:order-2 md:col-span-5 flex-shrink-0 relative z-20">
-                    <div id="prod-img-wrapper" class="relative w-44 h-44 sm:w-56 sm:h-56 md:w-72 md:h-72 lg:w-[380px] lg:h-[380px]">
+                    
+                    <!-- Dynamischer Wrapper: Statt harter Pixelgrößen nutzt er w-full und aspect-square mit extrem hohen Limits -->
+                    <div id="prod-img-wrapper" class="relative w-[65vw] sm:w-[50vw] md:w-full max-w-[280px] sm:max-w-[340px] md:max-w-[420px] lg:max-w-[500px] xl:max-w-[600px] aspect-square">
+                        
                         <div class="animate-float w-full h-full">
                             <img id="prod-img" src="" alt="Produkt" class="w-full h-full product-mask">
-                            <div id="prod-badge" class="absolute -top-2 -right-2 md:top-2 md:-right-2 w-12 h-12 md:w-16 md:h-16 rounded-full bg-brand-gold border-4 border-brand-black flex items-center justify-center shadow-lg z-20">
-                                <span class="text-brand-black font-black text-sm md:text-xl tracking-tighter">
-                                    <span class="text-[8px] md:text-[10px] block -mb-1 text-center font-sans tracking-widest">NR</span>
+                            
+                            <!-- Das Badge ist ebenfalls gewachsen, um harmonisch zu wirken -->
+                            <div id="prod-badge" class="absolute -top-1 -right-1 md:-top-4 md:-right-4 w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 rounded-full bg-brand-gold border-4 border-brand-black flex items-center justify-center shadow-lg z-20">
+                                <span class="text-brand-black font-black text-lg md:text-xl lg:text-3xl tracking-tighter">
+                                    <span class="text-[9px] md:text-[11px] lg:text-[13px] block -mb-1 text-center font-sans tracking-widest">NR</span>
                                     <span id="prod-nr" class="block text-center font-black">1</span>
                                 </span>
                             </div>
@@ -213,7 +218,7 @@
                 </div>
 
                 <!-- Links: Info -->
-                <div id="ui-left" class="w-full order-2 md:order-1 md:col-span-4 flex flex-col text-center md:text-left flex-shrink-0 z-20 mt-4 md:mt-0">
+                <div id="ui-left" class="w-full order-2 md:order-1 md:col-span-4 flex flex-col text-center md:text-left flex-shrink-0 z-20 mt-6 md:mt-0">
                     <div class="mb-2 md:mb-4 text-brand-gold font-bold tracking-widest text-[10px] md:text-xs uppercase flex items-center justify-center md:justify-start gap-3">
                         <span class="w-8 h-[2px] bg-brand-gold hidden md:block"></span>
                         <span id="cat-label">KATEGORIE</span>
@@ -228,21 +233,21 @@
 
                 <!-- Rechts: Preis -->
                 <div id="ui-right" class="w-full order-3 md:order-3 md:col-span-3 flex flex-col items-center md:items-end text-center md:text-right flex-shrink-0 z-20 mt-auto md:mt-0 mb-6 md:mb-0">
-                    <div class="w-full bg-brand-dark/80 backdrop-blur-md p-4 md:p-6 rounded-[20px] md:rounded-[24px] border border-brand-gold/20 shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative overflow-hidden">
+                    <div class="w-full bg-brand-dark/80 backdrop-blur-md p-4 md:p-6 lg:p-8 rounded-[20px] md:rounded-[24px] border border-brand-gold/20 shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative overflow-hidden">
                         <!-- Leichter Shine-Effekt auf der Preis-Box -->
                         <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-brand-gold/5 to-transparent pointer-events-none"></div>
                         
-                        <span class="text-[9px] md:text-[10px] font-medium tracking-[2px] text-brand-gold/60 uppercase block mb-3 md:mb-5 text-center relative z-10">PREIS</span>
+                        <span class="text-[9px] md:text-[10px] font-medium tracking-[2px] text-brand-gold/60 uppercase block mb-3 md:mb-6 text-center relative z-10">PREIS</span>
                         
                         <div class="flex justify-evenly items-center w-full relative z-10" id="price-container">
                             <div class="text-center" id="price-box-single">
                                 <span id="price-label-single" class="text-[9px] md:text-[10px] text-brand-gray uppercase tracking-wider block mb-1">Single</span>
-                                <span id="price-val-single" class="text-brand-white font-black text-xl sm:text-2xl md:text-3xl">0,00 €</span>
+                                <span id="price-val-single" class="text-brand-white font-black text-xl sm:text-2xl md:text-3xl lg:text-4xl">0,00 €</span>
                             </div>
-                            <div id="price-divider" class="w-px h-10 md:h-12 bg-brand-gold/20 mx-2"></div>
+                            <div id="price-divider" class="w-px h-10 md:h-12 lg:h-16 bg-brand-gold/20 mx-2 lg:mx-4"></div>
                             <div class="text-center" id="price-box-menu">
                                 <span class="text-[9px] md:text-[10px] text-brand-gold uppercase tracking-wider block mb-1">Menü</span>
-                                <span id="price-val-menu" class="text-brand-gold font-black text-xl sm:text-2xl md:text-3xl drop-shadow-[0_0_10px_rgba(212,175,55,0.3)]">0,00 €</span>
+                                <span id="price-val-menu" class="text-brand-gold font-black text-xl sm:text-2xl md:text-3xl lg:text-4xl drop-shadow-[0_0_10px_rgba(212,175,55,0.3)]">0,00 €</span>
                             </div>
                         </div>
                     </div>
@@ -391,7 +396,7 @@
         
         // Init Animation
         gsap.from([els.bgCat], { y: 50, opacity: 0, duration: 1, ease: "power3.out" });
-        gsap.from('#prod-img-wrapper', { scale: 3.5, rotationY: 45, opacity: 0, duration: 1.2, ease: "expo.out", delay: 0.2 });
+        gsap.from('#prod-img-wrapper', { scale: 2.6, rotationY: 45, opacity: 0, duration: 1.2, ease: "expo.out", delay: 0.2 });
         gsap.from(['#ui-left > *:not(h2)', '#ui-right'], { y: 30, opacity: 0, duration: 0.8, ease: "power2.out", delay: 0.4 });
 
         function updateDOM(index) {
@@ -459,7 +464,8 @@
             if (!products[currentIndex].isFooter) {
                 tlOut.to(['#ui-left > *:not(h2)', '#ui-right'], { y: -30 * dir, opacity: 0, duration: 0.3, ease: "power2.in" }, 0);
                 tlOut.to('.title-word', { y: -20 * dir, opacity: 0, duration: 0.2, stagger: 0.02, ease: "power2.in" }, 0);
-                tlOut.to('#prod-img-wrapper', { scale: 0.5, rotationX: 10 * dir, opacity: 0, duration: 0.3, ease: "power2.in" }, 0);
+                // Skalierung ist nun etwas sanfter beim Ausblenden (scale: 0.6)
+                tlOut.to('#prod-img-wrapper', { scale: 0.6, rotationX: 10 * dir, opacity: 0, duration: 0.3, ease: "power2.in" }, 0);
             } else {
                 tlOut.to(els.footerView, { y: -30 * dir, opacity: 0, duration: 0.3, ease: "power2.in" }, 0);
             }
@@ -476,10 +482,11 @@
                 // Einblenden
                 if (!isNextFooter) {
                     gsap.set(['#ui-left > *:not(h2)', '#ui-right'], { y: 30 * dir, opacity: 0 });
-                    gsap.set('#prod-img-wrapper', { scale: 3.5, rotationY: 25 * dir, rotationX: 15 * dir, opacity: 0 });
+                    // Start-Skalierung auf 2.6 verringert, damit das riesige Bild elegant reinslidet ohne zu pixeln
+                    gsap.set('#prod-img-wrapper', { scale: 2.6, rotationY: 25 * dir, rotationX: 15 * dir, opacity: 0 });
                     
                     tlIn.to(['#ui-left > *:not(h2)', '#ui-right'], { y: 0, opacity: 1, duration: 0.6, ease: "power3.out", stagger: 0.1 }, 0.1);
-                    tlIn.to('.title-word', { y: 0, opacity: 1, duration: 0.6, stagger: 0.05, ease: "back.out(1.5)" }, 0.2); // Cinematic Word Reveal
+                    tlIn.to('.title-word', { y: 0, opacity: 1, duration: 0.6, stagger: 0.05, ease: "back.out(1.5)" }, 0.2); 
                     tlIn.to('#prod-img-wrapper', { scale: 1, rotationY: 0, rotationX: 0, opacity: 1, duration: 0.8, ease: "expo.out" }, 0);
                 } else {
                     gsap.set(els.footerView, { y: 30 * dir, opacity: 0 });
@@ -504,11 +511,9 @@
         appContainer.addEventListener('mousemove', (e) => {
             if(isAnimating || window.innerWidth < 768 || document.querySelector('dialog[open]')) return;
             
-            // Berechne Mausposition relativ zur Mitte (-1 bis 1)
             const xAxis = (window.innerWidth / 2 - e.pageX) / 40;
             const yAxis = (window.innerHeight / 2 - e.pageY) / 40;
 
-            // 3D Tilt für das Produkt
             gsap.to('#prod-img-wrapper', {
                 rotationY: -xAxis,
                 rotationX: yAxis,
@@ -516,23 +521,10 @@
                 duration: 0.5
             });
 
-            // Gegenläufige Bewegung für Hintergrund (Tiefe)
-            gsap.to('.bg-text', {
-                x: xAxis * 1.5,
-                y: yAxis * 1.5,
-                ease: 'power1.out',
-                duration: 0.5
-            });
-
-            gsap.to('.bg-orb', {
-                x: -xAxis * 2,
-                y: -yAxis * 2,
-                ease: 'power1.out',
-                duration: 0.5
-            });
+            gsap.to('.bg-text', { x: xAxis * 1.5, y: yAxis * 1.5, ease: 'power1.out', duration: 0.5 });
+            gsap.to('.bg-orb', { x: -xAxis * 2, y: -yAxis * 2, ease: 'power1.out', duration: 0.5 });
         });
 
-        // Reset Parallax wenn Maus den Screen verlässt
         appContainer.addEventListener('mouseleave', () => {
             gsap.to(['#prod-img-wrapper', '.bg-text', '.bg-orb'], {
                 rotationY: 0, rotationX: 0, x: 0, y: 0, ease: 'power3.out', duration: 1
