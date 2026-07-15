@@ -88,10 +88,7 @@
             100% { transform: scale(1.1) translate(5%, 5%); opacity: 0.5; }
         }
 
-        /* Atmosphärische Gold-Partikel */
-        #particles-container {
-            position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden;
-        }
+        #particles-container { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
         .particle {
             position: absolute;
             background: rgba(212, 175, 55, 0.6);
@@ -113,9 +110,7 @@
             0%, 100% { transform: translateY(-10px); }
             50% { transform: translateY(10px); }
         }
-        .animate-float {
-            animation: float 4s ease-in-out infinite;
-        }
+        .animate-float { animation: float 4s ease-in-out infinite; }
 
         .bg-text {
             font-size: clamp(50px, 12vw, 160px); 
@@ -128,43 +123,41 @@
             will-change: transform;
         }
         
-        /* Perspektive für den 3D-Tilt-Effekt aktivieren */
-        #ui-center {
-            perspective: 1200px;
-        }
-        #prod-img-wrapper {
-            will-change: transform;
-            transform-style: preserve-3d;
-        }
+        #ui-center { perspective: 1200px; }
+        #prod-img-wrapper { will-change: transform; transform-style: preserve-3d; }
 
         .product-mask {
             border-radius: 50%;
             object-fit: cover;
             border: 3px solid rgba(212, 175, 55, 0.4);
             box-shadow: 0 0 40px rgba(0,0,0,0.9) inset, 0 20px 50px rgba(0,0,0,0.8);
-            transform: translateZ(20px); /* Hebt das Bild leicht in 3D an */
+            transform: translateZ(20px); 
         }
         
-        #prod-badge {
-            transform: translateZ(50px); /* Badge schwebt in 3D noch weiter vorne */
-        }
+        #prod-badge { transform: translateZ(50px); }
 
         .nav-dot { transition: all 0.3s ease; }
         .nav-dot.active { background-color: #D4AF37; width: 24px; box-shadow: 0 0 10px rgba(212, 175, 55, 0.8); }
 
-        dialog::backdrop { background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(10px); }
+        /* Custom Scrollbar für die Modals */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(212, 175, 55, 0.4); border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(212, 175, 55, 0.8); }
+
+        dialog::backdrop { background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(12px); }
     </style>
 </head>
 <body class="p-0 md:p-6 lg:p-8 box-border flex items-center justify-center font-sans">
 
-    <!-- Haupt-Container mit Mouse-Tracking Area -->
+    <!-- Haupt-Container -->
     <main id="app-container" class="relative w-full h-full md:rounded-[32px] overflow-hidden bg-brand-black flex flex-col shadow-[0_0_0_1px_rgba(212,175,55,0.15),0_20px_50px_rgba(0,0,0,0.9)]">
         
         <!-- Ambient Background -->
         <div class="bg-orb orb-gold"></div>
         <div class="bg-orb orb-green"></div>
         <div class="bg-grid"></div>
-        <div id="particles-container"></div> <!-- Gold-Staub -->
+        <div id="particles-container"></div> 
 
         <!-- Header -->
         <header class="absolute top-0 left-0 w-full p-5 md:p-6 flex justify-between items-center z-50 pointer-events-auto">
@@ -176,9 +169,16 @@
                 <span class="text-brand-white text-base md:text-lg tracking-wide font-black">The <span class="text-brand-gold">3B</span></span>
             </div>
             
-            <div class="flex items-center gap-4">
-                <span id="product-counter" class="text-brand-gold/80 text-xs font-medium tracking-[0.2em] hidden md:block">01 / 15</span>
-                <a href="images/Speisekarte.pdf" download class="text-[9px] md:text-xs font-bold tracking-[0.1em] uppercase text-brand-black bg-brand-gold border border-brand-gold hover:bg-brand-goldhover px-3 md:px-4 py-2 rounded-full transition-colors shadow-[0_0_15px_rgba(212,175,55,0.3)]">
+            <div class="flex items-center gap-2 md:gap-4">
+                <span id="product-counter" class="text-brand-gold/80 text-xs font-medium tracking-[0.2em] hidden lg:block">01 / 15</span>
+                
+                <!-- OPTIMIERTER ÜBERSICHTS-BUTTON ("MENÜ") -->
+                <button onclick="document.getElementById('modal-overview').showModal()" class="flex items-center gap-1.5 md:gap-2 text-[8px] md:text-[10px] font-bold tracking-[0.15em] uppercase text-brand-gold border border-brand-gold/40 hover:border-brand-gold hover:bg-brand-gold/10 px-3 py-1.5 md:px-4 md:py-2 rounded-full transition-all backdrop-blur-md bg-black/20" title="Gesamte Auswahl anzeigen">
+                    <svg class="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                    <span>Menü</span>
+                </button>
+
+                <a href="images/Speisekarte.pdf" download class="text-[8px] md:text-[10px] font-bold tracking-[0.15em] uppercase text-brand-black bg-brand-gold border border-brand-gold hover:bg-brand-goldhover px-3 py-1.5 md:px-4 md:py-2 rounded-full transition-colors shadow-[0_0_15px_rgba(212,175,55,0.3)]">
                     Speisekarte
                 </a>
             </div>
@@ -187,26 +187,17 @@
         <!-- Content Area -->
         <section class="relative z-10 w-full h-full flex flex-col pt-[20vh] md:pt-[22vh] pb-16 md:pb-12">
             
-            <!-- Hintergrund Text (Parallax-Target) -->
             <div class="absolute top-0 left-0 w-full flex items-start justify-center pt-[10vh] md:pt-[8vh] pointer-events-none">
                 <h1 id="bg-category" class="bg-text font-black tracking-tighter uppercase whitespace-nowrap">BURGER</h1>
             </div>
 
-            <!-- ==========================================
-                 PRODUKT ANSICHT
-                 ========================================== -->
+            <!-- PRODUKT ANSICHT -->
             <div id="product-view" class="w-full h-full flex-grow flex flex-col md:grid md:grid-cols-12 items-center justify-between md:justify-center px-5 md:px-12">
                 
-                <!-- Mitte: RIESIGES Produktbild & Nummer -->
                 <div id="ui-center" class="w-full flex justify-center items-center order-1 md:order-2 md:col-span-5 flex-shrink-0 relative z-20">
-                    
-                    <!-- Dynamischer Wrapper: Statt harter Pixelgrößen nutzt er w-full und aspect-square mit extrem hohen Limits -->
                     <div id="prod-img-wrapper" class="relative w-[65vw] sm:w-[50vw] md:w-full max-w-[280px] sm:max-w-[340px] md:max-w-[420px] lg:max-w-[500px] xl:max-w-[600px] aspect-square">
-                        
                         <div class="animate-float w-full h-full">
                             <img id="prod-img" src="" alt="Produkt" class="w-full h-full product-mask">
-                            
-                            <!-- Das Badge ist ebenfalls gewachsen, um harmonisch zu wirken -->
                             <div id="prod-badge" class="absolute -top-1 -right-1 md:-top-4 md:-right-4 w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 rounded-full bg-brand-gold border-4 border-brand-black flex items-center justify-center shadow-lg z-20">
                                 <span class="text-brand-black font-black text-lg md:text-xl lg:text-3xl tracking-tighter">
                                     <span class="text-[9px] md:text-[11px] lg:text-[13px] block -mb-1 text-center font-sans tracking-widest">NR</span>
@@ -217,28 +208,22 @@
                     </div>
                 </div>
 
-                <!-- Links: Info -->
                 <div id="ui-left" class="w-full order-2 md:order-1 md:col-span-4 flex flex-col text-center md:text-left flex-shrink-0 z-20 mt-6 md:mt-0">
                     <div class="mb-2 md:mb-4 text-brand-gold font-bold tracking-widest text-[10px] md:text-xs uppercase flex items-center justify-center md:justify-start gap-3">
                         <span class="w-8 h-[2px] bg-brand-gold hidden md:block"></span>
                         <span id="cat-label">KATEGORIE</span>
                     </div>
-                    <!-- Cinematic Reveal Container -->
                     <h2 id="prod-title" class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-brand-white mb-2 md:mb-4 leading-tight drop-shadow-md">
-                        <!-- Words will be injected here via JS -->
+                        <!-- Words injected via JS -->
                     </h2>
                     <span class="text-[9px] md:text-[10px] font-medium tracking-[2px] text-brand-gold/60 uppercase block mb-1 md:mb-2">ZUTATEN & INFOS</span>
                     <p id="prod-desc" class="text-xs sm:text-sm md:text-base text-brand-gray/90 leading-relaxed min-h-[40px] md:min-h-[80px]">Details werden geladen...</p>
                 </div>
 
-                <!-- Rechts: Preis -->
                 <div id="ui-right" class="w-full order-3 md:order-3 md:col-span-3 flex flex-col items-center md:items-end text-center md:text-right flex-shrink-0 z-20 mt-auto md:mt-0 mb-6 md:mb-0">
                     <div class="w-full bg-brand-dark/80 backdrop-blur-md p-4 md:p-6 lg:p-8 rounded-[20px] md:rounded-[24px] border border-brand-gold/20 shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative overflow-hidden">
-                        <!-- Leichter Shine-Effekt auf der Preis-Box -->
                         <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-brand-gold/5 to-transparent pointer-events-none"></div>
-                        
                         <span class="text-[9px] md:text-[10px] font-medium tracking-[2px] text-brand-gold/60 uppercase block mb-3 md:mb-6 text-center relative z-10">PREIS</span>
-                        
                         <div class="flex justify-evenly items-center w-full relative z-10" id="price-container">
                             <div class="text-center" id="price-box-single">
                                 <span id="price-label-single" class="text-[9px] md:text-[10px] text-brand-gray uppercase tracking-wider block mb-1">Single</span>
@@ -254,9 +239,7 @@
                 </div>
             </div>
 
-            <!-- ==========================================
-                 FOOTER ANSICHT
-                 ========================================== -->
+            <!-- FOOTER ANSICHT -->
             <div id="footer-view" class="hidden w-full h-full flex-col items-center justify-center px-5 md:px-12 z-20 text-center relative pb-24 md:pb-20">
                 <div class="w-24 h-24 md:w-32 md:h-32 rounded-full border-2 border-brand-gold/50 flex items-center justify-center overflow-hidden bg-brand-dark shadow-[0_0_30px_rgba(212,175,55,0.3)] mb-6 md:mb-8 mt-auto md:mt-0">
                     <img src="images/Logo.png" alt="The 3B Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" class="w-full h-full object-cover">
@@ -287,44 +270,59 @@
                     <button onclick="document.getElementById('modal-agb').showModal()" class="text-[10px] md:text-xs tracking-widest uppercase text-brand-gray hover:text-brand-gold border border-brand-gray/30 hover:border-brand-gold px-5 py-3 rounded-full transition-all">AGB</button>
                 </div>
             </div>
-            
         </section>
 
         <!-- Navigation Dots -->
         <div id="nav-dots" class="absolute bottom-4 md:bottom-6 w-full flex justify-center gap-1.5 md:gap-2 z-50 px-4 flex-wrap"></div>
     </main>
 
-    <!-- MODALS -->
-    <dialog id="modal-impressum" class="bg-brand-dark/95 text-white p-8 rounded-[24px] w-[90%] max-w-2xl border border-brand-gold/30 shadow-2xl m-auto backdrop-blur-xl z-[100]">
+    <!-- ==========================================
+         ÜBERSICHTS-MODAL (PRODUKT-GRID)
+         ========================================== -->
+    <dialog id="modal-overview" class="bg-brand-dark/95 p-6 md:p-10 rounded-[32px] w-[95%] max-w-6xl max-h-[85vh] border border-brand-gold/30 shadow-2xl m-auto backdrop-blur-xl z-[100] custom-scrollbar overflow-y-auto">
+        <div class="sticky top-0 bg-brand-dark/95 backdrop-blur-md pb-4 pt-2 mb-6 border-b border-brand-gold/20 flex justify-between items-center z-10">
+            <div>
+                <h2 class="text-2xl md:text-3xl font-black text-brand-white">Entdecke unsere Auswahl</h2>
+                <p class="text-brand-gold/70 text-xs tracking-widest uppercase mt-1">14 Premium Kreationen</p>
+            </div>
+            <button onclick="this.closest('dialog').close()" class="text-brand-gray hover:text-brand-white p-2 text-2xl leading-none transition-colors" title="Schließen">✕</button>
+        </div>
+        <div id="overview-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 pb-4">
+            <!-- Befüllung durch JS -->
+        </div>
+    </dialog>
+
+    <!-- WEITERE MODALS (Rechtliches) -->
+    <dialog id="modal-impressum" class="bg-brand-dark/95 text-white p-8 rounded-[24px] w-[90%] max-w-2xl max-h-[85vh] border border-brand-gold/30 shadow-2xl m-auto backdrop-blur-xl z-[100] custom-scrollbar overflow-y-auto">
         <div class="flex justify-between items-start mb-6 border-b border-brand-gold/20 pb-4">
             <h2 class="text-2xl font-black text-brand-gold">Impressum</h2>
             <button onclick="this.closest('dialog').close()" class="text-brand-gray hover:text-white p-2 text-xl leading-none">✕</button>
         </div>
-        <div class="text-brand-gray text-sm space-y-4 max-h-[60vh] overflow-y-auto pr-2">
+        <div class="text-brand-gray text-sm space-y-4">
             <p><strong>Angaben gemäß § 5 TMG</strong></p>
-            <p>The 3B Restaurant<br>Musterstraße 123<br>12345 Musterstadt</p>
+            <p>The 3B Restaurant<br>Konrad-Adenauerstr. 26<br>63322 Rödermark</p>
             <p><strong>Vertreten durch:</strong><br>Max Mustermann</p>
-            <p><strong>Kontakt:</strong><br>Telefon: +49 123 456789<br>E-Mail: info@the3b.de</p>
+            <p><strong>Kontakt:</strong><br>Telefon: 06074 / 72866583<br>E-Mail: the3b.support@gmail.com</p>
         </div>
     </dialog>
 
-    <dialog id="modal-datenschutz" class="bg-brand-dark/95 text-white p-8 rounded-[24px] w-[90%] max-w-2xl border border-brand-gold/30 shadow-2xl m-auto backdrop-blur-xl z-[100]">
+    <dialog id="modal-datenschutz" class="bg-brand-dark/95 text-white p-8 rounded-[24px] w-[90%] max-w-2xl max-h-[85vh] border border-brand-gold/30 shadow-2xl m-auto backdrop-blur-xl z-[100] custom-scrollbar overflow-y-auto">
         <div class="flex justify-between items-start mb-6 border-b border-brand-gold/20 pb-4">
             <h2 class="text-2xl font-black text-brand-gold">Datenschutz</h2>
             <button onclick="this.closest('dialog').close()" class="text-brand-gray hover:text-white p-2 text-xl leading-none">✕</button>
         </div>
-        <div class="text-brand-gray text-sm space-y-4 max-h-[60vh] overflow-y-auto pr-2">
+        <div class="text-brand-gray text-sm space-y-4">
             <p><strong>1. Datenschutz auf einen Blick</strong></p>
             <p>Allgemeine Hinweise: Die folgenden Hinweise geben einen einfachen Überblick darüber, was mit Ihren personenbezogenen Daten passiert, wenn Sie unsere Website besuchen.</p>
         </div>
     </dialog>
 
-    <dialog id="modal-agb" class="bg-brand-dark/95 text-white p-8 rounded-[24px] w-[90%] max-w-2xl border border-brand-gold/30 shadow-2xl m-auto backdrop-blur-xl z-[100]">
+    <dialog id="modal-agb" class="bg-brand-dark/95 text-white p-8 rounded-[24px] w-[90%] max-w-2xl max-h-[85vh] border border-brand-gold/30 shadow-2xl m-auto backdrop-blur-xl z-[100] custom-scrollbar overflow-y-auto">
         <div class="flex justify-between items-start mb-6 border-b border-brand-gold/20 pb-4">
             <h2 class="text-2xl font-black text-brand-gold">AGB</h2>
             <button onclick="this.closest('dialog').close()" class="text-brand-gray hover:text-white p-2 text-xl leading-none">✕</button>
         </div>
-        <div class="text-brand-gray text-sm space-y-4 max-h-[60vh] overflow-y-auto pr-2">
+        <div class="text-brand-gray text-sm space-y-4">
             <p><strong>Allgemeine Geschäftsbedingungen</strong></p>
             <p>Hier kannst du deine AGBs einfügen.</p>
         </div>
@@ -384,6 +382,34 @@
             counter: document.getElementById('product-counter')
         };
 
+        // --- GRID ÜBERSICHT GENERIEREN ---
+        function initOverviewGrid() {
+            const gridContainer = document.getElementById('overview-grid');
+            products.forEach((p, index) => {
+                if(p.isFooter) return; 
+                
+                const cardHtml = `
+                    <div class="group relative bg-black/40 border border-brand-gold/10 hover:border-brand-gold/80 rounded-2xl p-4 cursor-pointer transition-all duration-300 overflow-hidden flex flex-col items-center text-center shadow-lg hover:shadow-[0_0_20px_rgba(212,175,55,0.3)] hover:-translate-y-1" onclick="jumpToProduct(${index})">
+                        <div class="w-20 h-20 md:w-28 md:h-28 mb-3 relative">
+                            <img src="${p.img}" onerror="this.src='${p.fb}?auto=format&fit=crop&w=300&q=80'" class="w-full h-full object-cover rounded-full border-2 border-brand-gold/30 group-hover:scale-110 transition-transform duration-500 shadow-inner">
+                            <span class="absolute -top-1 -right-1 bg-brand-gold text-brand-black text-[10px] md:text-xs font-black w-6 h-6 md:w-7 md:h-7 rounded-full flex items-center justify-center border-2 border-brand-black shadow-md">${p.nr}</span>
+                        </div>
+                        <span class="text-[9px] text-brand-gold/80 tracking-widest uppercase mb-1 line-clamp-1 w-full">${p.cat}</span>
+                        <h3 class="text-xs md:text-sm font-black text-brand-white leading-tight line-clamp-2">${p.name}</h3>
+                    </div>
+                `;
+                gridContainer.innerHTML += cardHtml;
+            });
+        }
+        initOverviewGrid();
+
+        // --- DIREKT-SPRUNG ---
+        function jumpToProduct(targetIndex) {
+            document.getElementById('modal-overview').close();
+            setTimeout(() => { changeProduct(targetIndex); }, 100);
+        }
+
+        // --- NAV DOTS GENERIEREN ---
         const dotContainer = document.getElementById('nav-dots');
         for(let i=0; i<totalItems; i++) {
             const dot = document.createElement('button');
@@ -417,7 +443,6 @@
                 els.desc.innerText = p.desc;
                 els.nr.innerText = p.nr;
                 
-                // Cinematic Title Split Prep
                 const words = p.name.split(' ').map(w => `<span class="inline-block translate-y-full opacity-0 title-word">${w}</span>`).join(' ');
                 els.title.innerHTML = `<span class="overflow-hidden block pb-2">${words}</span>`;
                 
@@ -460,11 +485,9 @@
 
             const tlOut = gsap.timeline();
 
-            // Ausblenden
             if (!products[currentIndex].isFooter) {
                 tlOut.to(['#ui-left > *:not(h2)', '#ui-right'], { y: -30 * dir, opacity: 0, duration: 0.3, ease: "power2.in" }, 0);
                 tlOut.to('.title-word', { y: -20 * dir, opacity: 0, duration: 0.2, stagger: 0.02, ease: "power2.in" }, 0);
-                // Skalierung ist nun etwas sanfter beim Ausblenden (scale: 0.6)
                 tlOut.to('#prod-img-wrapper', { scale: 0.6, rotationX: 10 * dir, opacity: 0, duration: 0.3, ease: "power2.in" }, 0);
             } else {
                 tlOut.to(els.footerView, { y: -30 * dir, opacity: 0, duration: 0.3, ease: "power2.in" }, 0);
@@ -479,10 +502,8 @@
                 currentIndex = nextIndex;
                 const tlIn = gsap.timeline();
 
-                // Einblenden
                 if (!isNextFooter) {
                     gsap.set(['#ui-left > *:not(h2)', '#ui-right'], { y: 30 * dir, opacity: 0 });
-                    // Start-Skalierung auf 2.6 verringert, damit das riesige Bild elegant reinslidet ohne zu pixeln
                     gsap.set('#prod-img-wrapper', { scale: 2.6, rotationY: 25 * dir, rotationX: 15 * dir, opacity: 0 });
                     
                     tlIn.to(['#ui-left > *:not(h2)', '#ui-right'], { y: 0, opacity: 1, duration: 0.6, ease: "power3.out", stagger: 0.1 }, 0.1);
@@ -505,7 +526,7 @@
         }
 
         // ==========================================
-        // 3D MOUSE PARALLAX (Desktop Only)
+        // 3D MOUSE PARALLAX
         // ==========================================
         const appContainer = document.getElementById('app-container');
         appContainer.addEventListener('mousemove', (e) => {
@@ -514,21 +535,13 @@
             const xAxis = (window.innerWidth / 2 - e.pageX) / 40;
             const yAxis = (window.innerHeight / 2 - e.pageY) / 40;
 
-            gsap.to('#prod-img-wrapper', {
-                rotationY: -xAxis,
-                rotationX: yAxis,
-                ease: 'power1.out',
-                duration: 0.5
-            });
-
+            gsap.to('#prod-img-wrapper', { rotationY: -xAxis, rotationX: yAxis, ease: 'power1.out', duration: 0.5 });
             gsap.to('.bg-text', { x: xAxis * 1.5, y: yAxis * 1.5, ease: 'power1.out', duration: 0.5 });
             gsap.to('.bg-orb', { x: -xAxis * 2, y: -yAxis * 2, ease: 'power1.out', duration: 0.5 });
         });
 
         appContainer.addEventListener('mouseleave', () => {
-            gsap.to(['#prod-img-wrapper', '.bg-text', '.bg-orb'], {
-                rotationY: 0, rotationX: 0, x: 0, y: 0, ease: 'power3.out', duration: 1
-            });
+            gsap.to(['#prod-img-wrapper', '.bg-text', '.bg-orb'], { rotationY: 0, rotationX: 0, x: 0, y: 0, ease: 'power3.out', duration: 1 });
         });
 
         // ==========================================
@@ -550,7 +563,6 @@
         window.addEventListener('touchend', (e) => {
             if (document.querySelector('dialog[open]')) return;
             if (isAnimating) return;
-            
             let endY = e.changedTouches[0].clientY;
             let diffY = startY - endY; 
 
