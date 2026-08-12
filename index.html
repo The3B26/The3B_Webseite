@@ -13,7 +13,7 @@
 
     <style>
         /* ==========================================
-           GRUNDEINSTELLUNGEN (HARDCODED FARBEN FÜR TIZEN 2.4)
+           GRUNDEINSTELLUNGEN & PERFORMANCE FIXES
            ========================================== */
         * {
             box-sizing: border-box;
@@ -24,7 +24,7 @@
         }
 
         html, body {
-            background-color: #0A1C13; /* Hartes Dunkelgrün */
+            background-color: #0A1C13;
             color: #ffffff;
             width: 1920px;
             height: 1080px;
@@ -37,60 +37,54 @@
             height: 1080px;
             position: relative;
             background-color: #0A1C13;
-            /* Hintergrund-Verlauf mit alten Webkit-Präfixen zur Sicherheit */
-            background: -webkit-linear-gradient(135deg, #163827, #0A1C13);
             background: linear-gradient(135deg, #163827, #0A1C13);
             overflow: hidden;
         }
 
         /* ==========================================
-           HINTERGRUND, LICHT & PARTIKEL
+           HINTERGRUND (Optimiert für schwache CPUs)
            ========================================== */
         .bg-grid {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background-image: -webkit-linear-gradient(left, rgba(212, 175, 55, 0.05) 1px, transparent 1px),
-                              -webkit-linear-gradient(top, rgba(212, 175, 55, 0.05) 1px, transparent 1px);
             background-image: linear-gradient(to right, rgba(212, 175, 55, 0.05) 1px, transparent 1px),
                               linear-gradient(to bottom, rgba(212, 175, 55, 0.05) 1px, transparent 1px);
             background-size: 60px 60px;
             z-index: 1;
         }
 
+        /* KEIN FILTER: BLUR MEHR! Nutzt stattdessen native Verläufe (Radial Gradients) */
         .bg-orb {
             position: absolute;
             border-radius: 50%;
-            -webkit-filter: blur(140px);
-            filter: blur(140px);
-            opacity: 0.6;
+            opacity: 0.5;
             z-index: 0;
         }
-        .orb-gold { background-color: #D4AF37; width: 800px; height: 800px; top: -100px; left: -100px; }
-        .orb-green { background-color: #2F855A; width: 1000px; height: 1000px; bottom: -200px; right: -200px; }
+        .orb-gold { 
+            background: radial-gradient(circle, rgba(212,175,55,0.6) 0%, rgba(212,175,55,0) 70%); 
+            width: 1200px; height: 1200px; top: -300px; left: -300px; 
+        }
+        .orb-green { 
+            background: radial-gradient(circle, rgba(47,133,90,0.6) 0%, rgba(47,133,90,0) 70%); 
+            width: 1400px; height: 1400px; bottom: -400px; right: -400px; 
+        }
 
         #particles-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
         .particle {
             position: absolute;
-            background: rgba(212, 175, 55, 0.7);
+            background: rgba(212, 175, 55, 0.6);
             border-radius: 50%;
-            box-shadow: 0 0 12px rgba(212, 175, 55, 0.9);
             animation: float-particle linear infinite;
         }
-        @-webkit-keyframes float-particle {
-            0% { -webkit-transform: translateY(1080px) scale(0); opacity: 0; }
-            20% { opacity: 1; -webkit-transform: translateY(800px) scale(1); }
-            80% { opacity: 1; -webkit-transform: translateY(200px) scale(1); }
-            100% { -webkit-transform: translateY(-100px) scale(0); opacity: 0; }
-        }
         @keyframes float-particle {
-            0% { transform: translateY(1080px) scale(0); opacity: 0; }
-            20% { opacity: 1; transform: translateY(800px) scale(1); }
-            80% { opacity: 1; transform: translateY(200px) scale(1); }
-            100% { transform: translateY(-100px) scale(0); opacity: 0; }
+            0% { transform: translateY(1080px); opacity: 0; }
+            20% { opacity: 1; transform: translateY(800px); }
+            80% { opacity: 1; transform: translateY(200px); }
+            100% { transform: translateY(-100px); opacity: 0; }
         }
 
         /* ==========================================
-           HEADER (ABSOLUT POSITIONIERT)
+           HEADER
            ========================================== */
         header {
             position: absolute;
@@ -134,8 +128,11 @@
         }
 
         /* ==========================================
-           PRODUKT ANSICHT (ABSOLUTE KOORDINATEN FÜR 100% STABILITÄT)
+           PRODUKT ANSICHT & HARDWARE BESCHLEUNIGUNG
            ========================================== */
+        /* will-change signalisiert dem Monitor, dass er diese Elemente für weiche Animationen vorbereiten soll */
+        .anim-layer { will-change: transform, opacity; }
+
         #bg-category {
             position: absolute;
             top: 15%;
@@ -144,8 +141,8 @@
             font-size: 250px;
             line-height: 1;
             font-weight: 900;
-            color: rgba(212, 175, 55, 0.08); 
-            -webkit-text-stroke: 2px rgba(212, 175, 55, 0.3); 
+            color: rgba(212, 175, 55, 0.06); 
+            -webkit-text-stroke: 2px rgba(212, 175, 55, 0.2); 
             z-index: 2;
         }
 
@@ -156,13 +153,7 @@
         }
 
         /* LINKE SEITE (TEXT) */
-        #ui-left { 
-            position: absolute; 
-            left: 100px; 
-            top: 350px; 
-            width: 500px; 
-            z-index: 20; 
-        }
+        #ui-left { position: absolute; left: 100px; top: 350px; width: 500px; z-index: 20; }
         .cat-label { color: #D4AF37; font-size: 16px; font-weight: 800; letter-spacing: 3px; margin-bottom: 20px; }
         .cat-line { width: 40px; height: 3px; background: #D4AF37; display: inline-block; vertical-align: middle; margin-right: 15px; }
         h2 { font-size: 65px; font-weight: 900; line-height: 1.1; margin-bottom: 20px; text-shadow: 0 10px 20px rgba(0,0,0,0.5); color: #ffffff; }
@@ -170,21 +161,8 @@
         p { font-size: 20px; color: #E2E8F0; line-height: 1.6; min-height: 100px; }
 
         /* MITTE (BILD) */
-        #ui-center { 
-            position: absolute; 
-            left: 610px; 
-            top: 200px; 
-            width: 700px; 
-            height: 700px; 
-            z-index: 20; 
-        }
-        #prod-img-wrapper { 
-            width: 600px; 
-            height: 600px; 
-            position: absolute;
-            top: 50px;
-            left: 50px;
-        }
+        #ui-center { position: absolute; left: 610px; top: 200px; width: 700px; height: 700px; z-index: 20; }
+        #prod-img-wrapper { width: 600px; height: 600px; position: absolute; top: 50px; left: 50px; }
         .product-mask {
             width: 100%; height: 100%;
             border-radius: 50%;
@@ -207,13 +185,7 @@
         #prod-nr { font-size: 45px; font-weight: 900; line-height: 1; display: block; margin-top: -5px; }
 
         /* RECHTE SEITE (PREIS) */
-        #ui-right { 
-            position: absolute; 
-            right: 100px; 
-            top: 400px; 
-            width: 450px; 
-            z-index: 20; 
-        }
+        #ui-right { position: absolute; right: 100px; top: 400px; width: 450px; z-index: 20; }
         .price-panel {
             background-color: #1A432F;
             padding: 40px;
@@ -269,7 +241,7 @@
            ========================================== */
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 1920px; height: 1080px;
-            background: rgba(10, 28, 19, 0.9); z-index: 100;
+            background: rgba(10, 28, 19, 0.95); z-index: 100;
         }
         .modal-content {
             background: #163827; width: 1600px; height: 900px;
@@ -292,8 +264,6 @@
         .overview-nr { position: absolute; top: -5px; right: -5px; background: #D4AF37; color: #0A1C13; width: 35px; height: 35px; border-radius: 50%; font-weight: bold; text-align: center; line-height: 35px; font-size: 16px; border: 2px solid #0A1C13; }
         .overview-cat { color: #D4AF37; font-size: 12px; font-weight: bold; letter-spacing: 2px; margin-bottom: 10px; display: block; }
         .overview-title { font-size: 20px; font-weight: bold; color: #ffffff; display: block; }
-        
-        .title-word { display: inline-block; color: #ffffff; }
     </style>
 </head>
 <body>
@@ -303,6 +273,7 @@
         <div class="bg-orb orb-gold"></div>
         <div class="bg-orb orb-green"></div>
         <div class="bg-grid"></div>
+        <!-- Partikel reduziert auf 10 für mehr Performance -->
         <div id="particles-container"></div> 
 
         <header>
@@ -319,22 +290,23 @@
             </div>
         </header>
 
-        <div id="bg-category">BURGER</div>
+        <div id="bg-category" class="anim-layer">BURGER</div>
 
         <div id="product-view">
             
-            <div id="ui-left">
+            <div id="ui-left" class="anim-layer">
                 <div class="cat-label">
                     <span class="cat-line"></span>
                     <span id="cat-label">KATEGORIE</span>
                 </div>
+                <!-- Kein zerhackter Text mehr, sondern ein solides H2 -->
                 <h2 id="prod-title">Titel</h2>
                 <span class="subtitle">ZUTATEN & INFOS</span>
                 <p id="prod-desc">Details werden geladen...</p>
             </div>
 
             <div id="ui-center">
-                <div id="prod-img-wrapper">
+                <div id="prod-img-wrapper" class="anim-layer">
                     <img id="prod-img" src="" alt="Produkt" class="product-mask">
                     <div id="prod-badge">
                         <span>NR</span>
@@ -343,30 +315,26 @@
                 </div>
             </div>
 
-            <div id="ui-right">
+            <div id="ui-right" class="anim-layer">
                 <div class="price-panel">
                     <span class="subtitle" style="margin-bottom: 20px;">PREIS</span>
                     <div class="price-container" id="price-container">
-                        
                         <div class="price-box" id="price-box-single">
                             <span id="price-label-single" class="price-label label-gray">Single</span>
                             <span id="price-val-single" class="price-val val-white">0,00 €</span>
                         </div>
-                        
                         <div id="price-divider"></div>
-                        
                         <div class="price-box" id="price-box-menu">
                             <span class="price-label label-gold">Menü</span>
                             <span id="price-val-menu" class="price-val val-gold">0,00 €</span>
                         </div>
-
                     </div>
                 </div>
             </div>
 
         </div>
 
-        <div id="footer-view">
+        <div id="footer-view" class="anim-layer">
             <div class="logo-box">
                 <img src="images/Logo.png" alt="Logo">
             </div>
@@ -410,16 +378,16 @@
     </div>
 
     <script>
-        // --- PARTIKEL SYSTEM INIT ---
+        // --- PARTIKEL SYSTEM INIT (Reduziert auf 10 für glattere Performance) ---
         var particleContainer = document.getElementById('particles-container');
-        for (var i = 0; i < 20; i++) {
+        for (var i = 0; i < 10; i++) {
             var p = document.createElement('div');
             p.className = 'particle';
             var size = Math.random() * 6 + 3 + 'px';
             p.style.width = size;
             p.style.height = size;
             p.style.left = Math.random() * 1920 + 'px';
-            p.style.animationDuration = Math.random() * 10 + 10 + 's';
+            p.style.animationDuration = Math.random() * 8 + 12 + 's';
             p.style.animationDelay = Math.random() * 5 + 's';
             particleContainer.appendChild(p);
         }
@@ -499,7 +467,7 @@
         function jumpToProduct(targetIndex) {
             closeModal('modal-overview');
             resetAutoScroll();
-            setTimeout(function() { changeProduct(targetIndex); }, 100);
+            changeProduct(targetIndex);
         }
 
         var dotContainer = document.getElementById('nav-dots');
@@ -516,13 +484,19 @@
             dotContainer.appendChild(dot);
         }
 
+        // Setze Start-Werte
         updateDOM(0);
         startAutoScroll();
         
-        gsap.from([els.bgCat], { y: 50, opacity: 0, duration: 1, ease: "power3.out" });
-        gsap.from('#prod-img-wrapper', { scale: 1.2, opacity: 0, duration: 1.2, ease: "expo.out", delay: 0.2 });
-        gsap.from(['#ui-left', '#ui-right'], { y: 30, opacity: 0, duration: 0.8, ease: "power2.out", delay: 0.4 });
+        // Initiales Einblenden beim Starten
+        gsap.from(['#ui-left', '#ui-center', '#ui-right', '#bg-category'], { 
+            opacity: 0, 
+            y: 20, 
+            duration: 1, 
+            ease: "power2.out" 
+        });
 
+        // Funktion zum Aktualisieren der reinen Daten (Ohne HTML-Zerstückelung)
         function updateDOM(index) {
             var p = products[index];
             els.bgCat.innerText = p.cat;
@@ -539,12 +513,8 @@
                 els.desc.innerText = p.desc;
                 els.nr.innerText = p.nr;
                 
-                var words = p.name.split(' ');
-                var titleHtml = "";
-                for(var w = 0; w < words.length; w++) {
-                    titleHtml += '<span class="title-word">' + words[w] + '</span> ';
-                }
-                els.title.innerHTML = titleHtml;
+                // Einfacher Text statt vieler SPAN-Elemente!
+                els.title.innerText = p.name;
                 
                 if(p.priceM) {
                     els.priceSingleLabel.innerText = "SINGLE";
@@ -569,6 +539,7 @@
             }
         }
 
+        // Optimierte Wechsel-Animation
         function changeProduct(nextIndex) {
             if (nextIndex === currentIndex || isAnimating) return;
             
@@ -576,48 +547,38 @@
             if (nextIndex < 0) nextIndex = totalItems - 1;
             
             isAnimating = true;
-            var dir = nextIndex > currentIndex ? 1 : -1;
-            if (currentIndex === totalItems - 1 && nextIndex === 0) dir = 1;
-            if (currentIndex === 0 && nextIndex === totalItems - 1) dir = -1;
-
             var isNextFooter = products[nextIndex].isFooter;
-            var tlOut = gsap.timeline();
 
-            if (!products[currentIndex].isFooter) {
-                tlOut.to(['#ui-left', '#ui-right'], { y: -30 * dir, opacity: 0, duration: 0.3, ease: "power2.in" }, 0);
-                tlOut.to('#prod-img-wrapper', { scale: 0.8, opacity: 0, duration: 0.3, ease: "power2.in" }, 0);
-            } else {
-                tlOut.to(els.footerView, { y: -30 * dir, opacity: 0, duration: 0.3, ease: "power2.in" }, 0);
-            }
+            // 1. Sanftes Ausblenden ALLER Elemente gleichzeitig
+            gsap.to(['#ui-left', '#ui-center', '#ui-right', '#bg-category', '#footer-view'], {
+                opacity: 0,
+                y: -20, // Leichtes nach-oben-rutschen
+                duration: 0.4,
+                ease: "power2.inOut",
+                onComplete: function() {
+                    // 2. Im Hintergrund (unsichtbar) die Daten aktualisieren
+                    updateDOM(nextIndex);
+                    currentIndex = nextIndex;
 
-            tlOut.to(els.bgCat, { y: -50 * dir, opacity: 0, scale: 0.9, duration: 0.3, ease: "power2.in" }, 0);
-            tlOut.to('.bg-orb', { scale: 1.1, opacity: 0.3, duration: 0.3 }, 0);
+                    // Elemente für das Einblenden vorbereiten (leicht nach unten setzen)
+                    gsap.set(['#ui-left', '#ui-center', '#ui-right', '#bg-category', '#footer-view'], { y: 20 });
 
-            setTimeout(function() {
-                updateDOM(nextIndex);
-                currentIndex = nextIndex;
-                var tlIn = gsap.timeline();
+                    // Entscheiden, was eingeblendet wird
+                    var elementsToAnimate = isNextFooter ? ['#footer-view'] : ['#bg-category', '#ui-center', '#ui-left', '#ui-right'];
 
-                if (!isNextFooter) {
-                    gsap.set(['#ui-left', '#ui-right'], { y: 30 * dir, opacity: 0 });
-                    gsap.set('#prod-img-wrapper', { scale: 1.2, opacity: 0 });
-                    
-                    tlIn.to(['#ui-left', '#ui-right'], { y: 0, opacity: 1, duration: 0.6, ease: "power3.out", stagger: 0.1 }, 0.1);
-                    tlIn.to('#prod-img-wrapper', { scale: 1, opacity: 1, duration: 0.8, ease: "expo.out" }, 0);
-                    
-                    gsap.fromTo('.title-word', {y: 30, opacity: 0}, {y: 0, opacity: 1, duration: 0.6, stagger: 0.05, ease: "back.out(1.5)"});
-                } else {
-                    gsap.set(els.footerView, { y: 30 * dir, opacity: 0 });
-                    tlIn.to(els.footerView, { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" }, 0.1);
+                    // 3. Sanftes Einblenden der neuen Elemente
+                    gsap.to(elementsToAnimate, {
+                        opacity: 1,
+                        y: 0, // Zurück auf Originalposition
+                        duration: 0.6,
+                        ease: "power2.out",
+                        stagger: 0.1, // Leicht verzögert nacheinander
+                        onComplete: function() {
+                            isAnimating = false;
+                        }
+                    });
                 }
-
-                gsap.set(els.bgCat, { y: 50 * dir, opacity: 0, scale: 1.1 });
-
-                tlIn.to(els.bgCat, { y: 0, opacity: 1, scale: 1, duration: 0.7, ease: "power3.out" }, 0);
-                tlIn.to('.bg-orb', { scale: 1, opacity: 0.6, duration: 0.8, ease: "power3.out" }, 0);
-
-                setTimeout(function() { isAnimating = false; }, 600); 
-            }, 300);
+            });
         }
 
         function startAutoScroll() {
