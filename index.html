@@ -2,59 +2,55 @@
 <html lang="de">
 <head>
     <meta charset="utf-8" />
-    <!-- HIER IST DER FIX: Zwingt den Samsung Monitor auf die echte Auflösung ohne künstlichen Zoom -->
+    <!-- Zwingt den Samsung Monitor auf exakt Full-HD ohne Zoom -->
     <meta name="viewport" content="width=1920, height=1080, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi">
     <title>The 3B | Premium Products</title>
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- GSAP für High-End Animationen -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        serif: ['Playfair Display', 'serif'],
-                    },
-                    colors: {
-                        brand: {
-                            bgDark: '#0A1C13',       // Sehr dunkles Grün
-                            bgLight: '#163827',      // Helleres Grün
-                            panel: '#1A432F',        // Grün für Boxen
-                            gold: '#D4AF37',
-                            goldhover: '#E5C158',
-                            white: '#ffffff',
-                            gray: '#E2E8F0'          // Helles Grau
-                        }
-                    },
-                    boxShadow: {
-                        'main-element': '0 30px 60px rgba(0, 0, 0, 0.5), 0 10px 30px rgba(212, 175, 55, 0.15)',
-                    }
-                }
-            }
-        }
-    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
 
     <style>
-        /* Extrem wichtig für Monitore: Feste Maße erzwingen */
-        html, body {
-            background-color: #0A1C13; 
-            color: #ffffff;
+        /* ==========================================
+           GRUNDEINSTELLUNGEN & MAGIC-INFO FIX
+           ========================================== */
+        :root {
+            --brand-bgDark: #0A1C13;
+            --brand-bgLight: #163827;
+            --brand-panel: #1A432F;
+            --brand-gold: #D4AF37;
+            --brand-white: #ffffff;
+            --brand-gray: #E2E8F0;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
             margin: 0;
             padding: 0;
-            width: 100vw;
-            height: 100vh;
+            user-select: none;
+        }
+
+        html, body {
+            background-color: var(--brand-bgDark);
+            color: var(--brand-white);
+            width: 1920px;
+            height: 1080px;
             overflow: hidden; 
             touch-action: none; 
-            overscroll-behavior: none;
-            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Der Hauptcontainer ist strikt auf 1920x1080 gesetzt */
+        #app-container {
+            width: 1920px;
+            height: 1080px;
+            position: relative;
+            background: linear-gradient(135deg, var(--brand-bgLight), var(--brand-bgDark));
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
         /* ==========================================
@@ -62,13 +58,11 @@
            ========================================== */
         .bg-grid {
             position: absolute;
-            inset: 0;
+            top: 0; left: 0; width: 100%; height: 100%;
             background-image: 
                 linear-gradient(to right, rgba(212, 175, 55, 0.05) 1px, transparent 1px),
                 linear-gradient(to bottom, rgba(212, 175, 55, 0.05) 1px, transparent 1px);
             background-size: 60px 60px;
-            mask-image: radial-gradient(circle at center, black 40%, transparent 90%);
-            -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 90%);
             z-index: 1;
         }
 
@@ -79,17 +73,16 @@
             opacity: 0.6;
             animation: pulse-orb 15s ease-in-out infinite alternate;
             z-index: 0;
-            will-change: transform;
         }
-        .orb-gold { background-color: #D4AF37; width: 50vw; height: 50vw; top: -10%; left: -10%; }
-        .orb-green { background-color: #2F855A; width: 60vw; height: 60vw; bottom: -20%; right: -15%; animation-delay: -7s; }
+        .orb-gold { background-color: var(--brand-gold); width: 800px; height: 800px; top: -100px; left: -100px; }
+        .orb-green { background-color: #2F855A; width: 1000px; height: 1000px; bottom: -200px; right: -200px; animation-delay: -7s; }
 
         @keyframes pulse-orb {
             0% { transform: scale(1) translate(0, 0); opacity: 0.5; }
-            100% { transform: scale(1.1) translate(5%, 5%); opacity: 0.7; }
+            100% { transform: scale(1.1) translate(50px, 50px); opacity: 0.7; }
         }
 
-        #particles-container { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
+        #particles-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
         .particle {
             position: absolute;
             background: rgba(212, 175, 55, 0.7);
@@ -98,60 +91,207 @@
             animation: float-particle linear infinite;
         }
         @keyframes float-particle {
-            0% { transform: translateY(100vh) translateX(0) scale(0); opacity: 0; }
-            20% { opacity: 1; transform: translateY(80vh) translateX(-20px) scale(1); }
-            80% { opacity: 1; transform: translateY(20vh) translateX(20px) scale(1); }
-            100% { transform: translateY(-10vh) translateX(0) scale(0); opacity: 0; }
+            0% { transform: translateY(1080px) scale(0); opacity: 0; }
+            20% { opacity: 1; transform: translateY(800px) scale(1); }
+            80% { opacity: 1; transform: translateY(200px) scale(1); }
+            100% { transform: translateY(-100px) scale(0); opacity: 0; }
         }
 
         /* ==========================================
-           3D ELEMENTE & TYPOGRAFIE
+           HEADER (LOGO & COUNTER)
            ========================================== */
-        @keyframes float {
-            0%, 100% { transform: translateY(-10px); }
-            50% { transform: translateY(10px); }
+        header {
+            position: absolute;
+            top: 0; left: 0; width: 100%;
+            padding: 40px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 50;
         }
-        .animate-float { animation: float 4s ease-in-out infinite; }
 
-        .bg-text {
-            font-size: clamp(50px, 12vw, 160px); 
-            line-height: 0.8;
-            color: rgba(212, 175, 55, 0.12); 
-            -webkit-text-stroke: 1px rgba(212, 175, 55, 0.4); 
-            text-shadow: 0 0 30px rgba(212, 175, 55, 0.2); 
-            user-select: none;
-            z-index: 2;
-            will-change: transform;
+        .header-left { display: flex; align-items: center; gap: 20px; cursor: pointer; }
+        .logo-box {
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            border: 2px solid rgba(212,175,55,0.6);
+            background: var(--brand-panel);
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(212,175,55,0.3);
         }
+        .logo-box img { width: 100%; height: 100%; object-fit: cover; }
+        .brand-name { font-size: 28px; font-weight: 900; letter-spacing: 2px; }
+        .brand-name span { color: var(--brand-gold); }
+
+        .header-right { display: flex; align-items: center; gap: 30px; }
+        .counter { color: rgba(255,255,255,0.9); font-size: 18px; font-weight: 600; letter-spacing: 4px; }
         
-        #ui-center { perspective: 1200px; }
-        #prod-img-wrapper { will-change: transform; transform-style: preserve-3d; }
+        .btn {
+            background: rgba(26, 67, 47, 0.4);
+            border: 1px solid rgba(212,175,55,0.5);
+            color: var(--brand-gold);
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+        }
+        .btn-solid { background: var(--brand-gold); color: var(--brand-bgDark); }
 
+        /* ==========================================
+           PRODUKT ANSICHT (MITTE)
+           ========================================== */
+        #bg-category {
+            position: absolute;
+            top: 15%;
+            width: 100%;
+            text-align: center;
+            font-size: 280px;
+            line-height: 1;
+            font-weight: 900;
+            color: rgba(212, 175, 55, 0.08); 
+            -webkit-text-stroke: 2px rgba(212, 175, 55, 0.3); 
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        #product-view {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            height: 100%;
+            padding: 0 100px;
+            z-index: 10;
+        }
+
+        /* LINKE SEITE (TEXT) */
+        #ui-left { width: 450px; z-index: 20; }
+        .cat-label { color: var(--brand-gold); font-size: 16px; font-weight: 800; letter-spacing: 3px; display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+        .cat-line { width: 40px; height: 3px; background: var(--brand-gold); }
+        h2 { font-size: 65px; font-weight: 900; line-height: 1.1; margin-bottom: 20px; text-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+        .subtitle { font-size: 14px; color: rgba(212,175,55,0.8); letter-spacing: 3px; font-weight: 800; display: block; margin-bottom: 10px; }
+        p { font-size: 20px; color: var(--brand-gray); line-height: 1.6; min-height: 100px; }
+
+        /* MITTE (BILD) */
+        #ui-center { flex: 1; display: flex; justify-content: center; z-index: 20; perspective: 1500px; }
+        #prod-img-wrapper { width: 550px; height: 550px; position: relative; transform-style: preserve-3d; }
         .product-mask {
+            width: 100%; height: 100%;
             border-radius: 50%;
             object-fit: cover;
-            border: 4px solid rgba(212, 175, 55, 0.6);
-            box-shadow: 0 0 40px rgba(10, 28, 19, 0.8) inset, 0 25px 60px rgba(0,0,0,0.6);
-            transform: translateZ(20px); 
+            border: 6px solid rgba(212, 175, 55, 0.6);
+            box-shadow: inset 0 0 50px rgba(10,28,19,0.8), 0 30px 70px rgba(0,0,0,0.7);
         }
+        #prod-badge {
+            position: absolute; top: -10px; right: -10px;
+            width: 130px; height: 130px;
+            border-radius: 50%;
+            background: var(--brand-gold);
+            border: 6px solid var(--brand-bgDark);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.6);
+            color: var(--brand-bgDark);
+            transform: translateZ(50px);
+        }
+        #prod-badge span:first-child { font-size: 16px; font-weight: 800; letter-spacing: 2px; }
+        #prod-nr { font-size: 45px; font-weight: 900; line-height: 1; }
+
+        .animate-float { animation: float 4s ease-in-out infinite; width: 100%; height: 100%; }
+        @keyframes float { 0%, 100% { transform: translateY(-15px); } 50% { transform: translateY(15px); } }
+
+        /* RECHTE SEITE (PREIS) */
+        #ui-right { width: 450px; display: flex; justify-content: flex-end; z-index: 20; }
+        .price-panel {
+            background: rgba(26, 67, 47, 0.85);
+            backdrop-filter: blur(15px);
+            padding: 40px;
+            border-radius: 30px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+            width: 100%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .price-panel::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(212,175,55,0.1), transparent); pointer-events: none;
+        }
+        .price-container { display: flex; justify-content: space-evenly; align-items: center; margin-top: 15px; }
+        .price-box { text-align: center; }
+        .price-label { font-size: 14px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; display: block; }
+        .label-gray { color: var(--brand-gray); }
+        .label-gold { color: var(--brand-gold); }
+        .price-val { font-size: 45px; font-weight: 900; text-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .val-white { color: var(--brand-white); }
+        .val-gold { color: var(--brand-gold); }
+        #price-divider { width: 2px; height: 70px; background: rgba(212, 175, 55, 0.3); }
+
+        /* ==========================================
+           FOOTER ANSICHT
+           ========================================== */
+        #footer-view {
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            width: 100%; height: 100%; z-index: 20; text-align: center;
+        }
+        #footer-view .logo-box { width: 150px; height: 150px; margin-bottom: 40px; }
+        #footer-view h2 { font-size: 70px; margin-bottom: 20px; }
+        .footer-grid { display: flex; gap: 40px; margin-top: 50px; }
+        .footer-card {
+            background: rgba(26, 67, 47, 0.8); padding: 30px; border-radius: 20px;
+            border: 1px solid rgba(212,175,55,0.3); width: 350px;
+        }
+        .footer-card span:first-child { color: var(--brand-gold); font-size: 14px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; display: block; margin-bottom: 10px; }
+        .footer-card span:last-child { color: var(--brand-white); font-size: 18px; line-height: 1.5; }
+
+        /* ==========================================
+           NAVIGATION (PUNKTE)
+           ========================================== */
+        #nav-dots { position: absolute; bottom: 50px; width: 100%; display: flex; justify-content: center; gap: 12px; z-index: 50; }
+        .nav-dot { width: 16px; height: 16px; border-radius: 50%; background: rgba(255,255,255,0.3); border: none; transition: 0.3s; cursor: pointer; }
+        .nav-dot.active { background: var(--brand-gold); width: 40px; box-shadow: 0 0 15px rgba(212,175,55,0.8); }
+
+        /* ==========================================
+           MODALS / OVERLAYS (Tizen 2.4 Fix - Kein <dialog> Tag!)
+           ========================================== */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 1920px; height: 1080px;
+            background: rgba(10, 28, 19, 0.9); backdrop-filter: blur(10px); z-index: 100;
+            align-items: center; justify-content: center;
+        }
+        .modal-content {
+            background: var(--brand-bgLight); width: 1600px; height: 900px;
+            border-radius: 40px; border: 2px solid rgba(212,175,55,0.4); box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+            padding: 60px; position: relative; overflow-y: auto;
+        }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(212,175,55,0.3); padding-bottom: 30px; margin-bottom: 40px; }
+        .modal-header h2 { font-size: 45px; margin: 0; }
+        .close-btn { background: none; border: none; color: var(--brand-white); font-size: 50px; cursor: pointer; }
         
-        #prod-badge { transform: translateZ(50px); }
+        .overview-grid { display: flex; flex-wrap: wrap; gap: 30px; }
+        .overview-card {
+            width: calc(25% - 23px); background: rgba(10,28,19,0.5); padding: 30px;
+            border-radius: 20px; border: 1px solid rgba(212,175,55,0.2);
+            display: flex; flex-direction: column; align-items: center; text-align: center; cursor: pointer;
+        }
+        .overview-card:hover { border-color: var(--brand-gold); transform: translateY(-5px); }
+        .overview-img-box { width: 140px; height: 140px; position: relative; margin-bottom: 20px; }
+        .overview-img-box img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 3px solid rgba(212,175,55,0.5); }
+        .overview-nr { position: absolute; top: -5px; right: -5px; background: var(--brand-gold); color: var(--brand-bgDark); width: 35px; height: 35px; border-radius: 50%; font-weight: bold; display: flex; align-items: center; justify-content: center; font-size: 16px; border: 2px solid var(--brand-bgDark); }
+        .overview-cat { color: var(--brand-gold); font-size: 12px; font-weight: bold; letter-spacing: 2px; margin-bottom: 10px; }
+        .overview-title { font-size: 20px; font-weight: bold; }
 
-        .nav-dot { transition: all 0.3s ease; }
-        .nav-dot.active { background-color: #D4AF37; width: 24px; box-shadow: 0 0 12px rgba(212, 175, 55, 0.9); }
-
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); border-radius: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(212, 175, 55, 0.5); border-radius: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(212, 175, 55, 0.9); }
-
-        dialog::backdrop { background: rgba(10, 28, 19, 0.7); backdrop-filter: blur(15px); }
+        /* Title Animation Class */
+        .title-word { display: inline-block; }
     </style>
 </head>
-<body class="p-0 md:p-6 lg:p-8 box-border flex items-center justify-center font-sans">
+<body>
 
-    <!-- Haupt-Container -->
-    <main id="app-container" class="relative w-full h-full md:rounded-[32px] overflow-hidden bg-gradient-to-br from-brand-bgLight to-brand-bgDark flex flex-col shadow-[0_0_0_1px_rgba(212,175,55,0.2),0_20px_60px_rgba(0,0,0,0.7)]">
+    <main id="app-container">
         
         <!-- Ambient Background -->
         <div class="bg-orb orb-gold"></div>
@@ -160,120 +300,136 @@
         <div id="particles-container"></div> 
 
         <!-- Header -->
-        <header class="absolute top-0 left-0 w-full p-5 md:p-6 flex justify-between items-center z-50 pointer-events-auto">
-            <div class="flex items-center gap-3 cursor-pointer group" onclick="location.reload();">
-                <div class="w-10 h-10 rounded-full border border-brand-gold/60 flex items-center justify-center overflow-hidden bg-brand-panel shadow-[0_0_20px_rgba(212,175,55,0.3)] group-hover:scale-105 transition-transform">
-                    <img src="images/Logo.png" alt="The 3B Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" class="w-full h-full object-cover">
-                    <span class="text-brand-gold font-black text-sm hidden">3B</span>
+        <header>
+            <div class="header-left" onclick="location.reload();">
+                <div class="logo-box">
+                    <img src="images/Logo.png" alt="Logo">
                 </div>
-                <span class="text-brand-white text-base md:text-lg tracking-wide font-black">The <span class="text-brand-gold">3B</span></span>
+                <div class="brand-name">The <span>3B</span></div>
             </div>
             
-            <div class="flex items-center gap-2 md:gap-4">
-                <span id="product-counter" class="text-brand-white/90 text-xs font-medium tracking-[0.2em] hidden lg:block">01 / 15</span>
+            <div class="header-right">
+                <span id="product-counter" class="counter">01 / 15</span>
+                <button onclick="openModal('modal-overview')" class="btn">Menü Übersicht</button>
             </div>
         </header>
 
         <!-- Content Area -->
-        <section class="relative z-10 w-full h-full flex flex-col pt-[20vh] md:pt-[22vh] pb-16 md:pb-12">
+        <div id="bg-category">BURGER</div>
+
+        <!-- PRODUKT ANSICHT -->
+        <div id="product-view">
             
-            <div class="absolute top-0 left-0 w-full flex items-start justify-center pt-[10vh] md:pt-[8vh] pointer-events-none">
-                <h1 id="bg-category" class="bg-text font-black tracking-tighter uppercase whitespace-nowrap">BURGER</h1>
+            <!-- Links: Text -->
+            <div id="ui-left">
+                <div class="cat-label">
+                    <div class="cat-line"></div>
+                    <span id="cat-label">KATEGORIE</span>
+                </div>
+                <h2 id="prod-title">Titel</h2>
+                <span class="subtitle">ZUTATEN & INFOS</span>
+                <p id="prod-desc">Details werden geladen...</p>
             </div>
 
-            <!-- PRODUKT ANSICHT -->
-            <div id="product-view" class="w-full h-full flex-grow flex flex-col md:grid md:grid-cols-12 items-center justify-between md:justify-center px-5 md:px-12">
-                
-                <div id="ui-center" class="w-full flex justify-center items-center order-1 md:order-2 md:col-span-5 flex-shrink-0 relative z-20">
-                    <div id="prod-img-wrapper" class="relative w-[65vw] sm:w-[50vw] md:w-full max-w-[280px] sm:max-w-[340px] md:max-w-[420px] lg:max-w-[500px] xl:max-w-[600px] aspect-square">
-                        <div class="animate-float w-full h-full">
-                            <img id="prod-img" src="" alt="Produkt" class="w-full h-full product-mask">
-                            <div id="prod-badge" class="absolute -top-1 -right-1 md:-top-4 md:-right-4 w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 rounded-full bg-brand-gold border-4 border-brand-bgDark flex items-center justify-center shadow-[0_10px_25px_rgba(0,0,0,0.5)] z-20">
-                                <span class="text-brand-bgDark font-black text-lg md:text-xl lg:text-3xl tracking-tighter">
-                                    <span class="text-[9px] md:text-[11px] lg:text-[13px] block -mb-1 text-center font-sans tracking-widest font-bold">NR</span>
-                                    <span id="prod-nr" class="block text-center font-black">1</span>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="ui-left" class="w-full order-2 md:order-1 md:col-span-4 flex flex-col text-center md:text-left flex-shrink-0 z-20 mt-6 md:mt-0">
-                    <div class="mb-2 md:mb-4 text-brand-gold font-bold tracking-widest text-[10px] md:text-xs uppercase flex items-center justify-center md:justify-start gap-3">
-                        <span class="w-8 h-[2px] bg-brand-gold hidden md:block"></span>
-                        <span id="cat-label">KATEGORIE</span>
-                    </div>
-                    <h2 id="prod-title" class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-brand-white mb-2 md:mb-4 leading-tight drop-shadow-lg">
-                        <!-- Words injected via JS -->
-                    </h2>
-                    <span class="text-[9px] md:text-[10px] font-semibold tracking-[2px] text-brand-gold/80 uppercase block mb-1 md:mb-2">ZUTATEN & INFOS</span>
-                    <p id="prod-desc" class="text-xs sm:text-sm md:text-base text-brand-gray leading-relaxed min-h-[40px] md:min-h-[80px]">Details werden geladen...</p>
-                </div>
-
-                <div id="ui-right" class="w-full order-3 md:order-3 md:col-span-3 flex flex-col items-center md:items-end text-center md:text-right flex-shrink-0 z-20 mt-auto md:mt-0 mb-6 md:mb-0">
-                    <div class="w-full bg-brand-panel/80 backdrop-blur-xl p-4 md:p-6 lg:p-8 rounded-[20px] md:rounded-[24px] border border-brand-gold/30 shadow-[0_20px_50px_rgba(0,0,0,0.4)] relative overflow-hidden">
-                        <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-brand-gold/10 to-transparent pointer-events-none"></div>
-                        <span class="text-[9px] md:text-[10px] font-semibold tracking-[2px] text-brand-gold/80 uppercase block mb-3 md:mb-6 text-center relative z-10">PREIS</span>
-                        <div class="flex justify-evenly items-center w-full relative z-10" id="price-container">
-                            <div class="text-center" id="price-box-single">
-                                <span id="price-label-single" class="text-[9px] md:text-[10px] text-brand-gray uppercase tracking-wider block mb-1 font-medium">Single</span>
-                                <span id="price-val-single" class="text-brand-white font-black text-xl sm:text-2xl md:text-3xl lg:text-4xl drop-shadow-md">0,00 €</span>
-                            </div>
-                            <div id="price-divider" class="w-px h-10 md:h-12 lg:h-16 bg-brand-gold/30 mx-2 lg:mx-4"></div>
-                            <div class="text-center" id="price-box-menu">
-                                <span class="text-[9px] md:text-[10px] text-brand-gold uppercase tracking-wider block mb-1 font-medium">Menü</span>
-                                <span id="price-val-menu" class="text-brand-gold font-black text-xl sm:text-2xl md:text-3xl lg:text-4xl drop-shadow-[0_0_12px_rgba(212,175,55,0.4)]">0,00 €</span>
-                            </div>
+            <!-- Mitte: Bild -->
+            <div id="ui-center">
+                <div id="prod-img-wrapper">
+                    <div class="animate-float">
+                        <img id="prod-img" src="" alt="Produkt" class="product-mask">
+                        <div id="prod-badge">
+                            <span>NR</span>
+                            <span id="prod-nr">1</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- FOOTER ANSICHT -->
-            <div id="footer-view" class="hidden w-full h-full flex-col items-center justify-center px-5 md:px-12 z-20 text-center relative pb-24 md:pb-20">
-                <div class="w-24 h-24 md:w-32 md:h-32 rounded-full border-2 border-brand-gold/60 flex items-center justify-center overflow-hidden bg-brand-panel shadow-[0_0_40px_rgba(212,175,55,0.4)] mb-6 md:mb-8 mt-auto md:mt-0">
-                    <img src="images/Logo.png" alt="The 3B Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" class="w-full h-full object-cover">
-                    <span class="text-brand-gold font-black text-2xl hidden">3B</span>
-                </div>
-                
-                <h2 class="text-3xl md:text-5xl font-black text-brand-white mb-4 drop-shadow-lg">Vielen Dank für deinen Besuch!</h2>
-                <p class="text-brand-gray text-sm md:text-base max-w-md mx-auto mb-10 leading-relaxed">Wir freuen uns darauf, dich bald bei uns begrüßen zu dürfen. Frische Zutaten, Premium Qualität & echter Geschmack.</p>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 w-full max-w-3xl mb-12">
-                    <div class="bg-brand-panel/80 backdrop-blur-xl p-5 md:p-6 rounded-2xl border border-brand-gold/30 shadow-lg">
-                        <span class="block text-[10px] text-brand-gold uppercase tracking-widest mb-2 font-semibold">Adresse</span>
-                        <span class="block text-brand-white text-sm">Musterstraße 123<br>12345 Musterstadt</span>
-                    </div>
-                    <div class="bg-brand-panel/80 backdrop-blur-xl p-5 md:p-6 rounded-2xl border border-brand-gold/30 shadow-lg">
-                        <span class="block text-[10px] text-brand-gold uppercase tracking-widest mb-2 font-semibold">Kontakt</span>
-                        <span class="block text-brand-white text-sm">+49 123 456789<br>info@the3b.de</span>
-                    </div>
-                    <div class="bg-brand-panel/80 backdrop-blur-xl p-5 md:p-6 rounded-2xl border border-brand-gold/30 shadow-lg">
-                        <span class="block text-[10px] text-brand-gold uppercase tracking-widest mb-2 font-semibold">Öffnungszeiten</span>
-                        <span class="block text-brand-white text-sm">Mo-Sa: 11:00 - 22:00<br>So: Geschlossen</span>
+            <!-- Rechts: Preis -->
+            <div id="ui-right">
+                <div class="price-panel">
+                    <span class="subtitle" style="margin-bottom: 20px;">PREIS</span>
+                    <div class="price-container" id="price-container">
+                        
+                        <div class="price-box" id="price-box-single">
+                            <span id="price-label-single" class="price-label label-gray">Single</span>
+                            <span id="price-val-single" class="price-val val-white">0,00 €</span>
+                        </div>
+                        
+                        <div id="price-divider"></div>
+                        
+                        <div class="price-box" id="price-box-menu">
+                            <span class="price-label label-gold">Menü</span>
+                            <span id="price-val-menu" class="price-val val-gold">0,00 €</span>
+                        </div>
+
                     </div>
                 </div>
             </div>
-        </section>
+
+        </div>
+
+        <!-- FOOTER ANSICHT -->
+        <div id="footer-view">
+            <div class="logo-box" style="border: 4px solid rgba(212,175,55,0.6); box-shadow: 0 0 50px rgba(212,175,55,0.4);">
+                <img src="images/Logo.png" alt="Logo">
+            </div>
+            
+            <h2>Vielen Dank für deinen Besuch!</h2>
+            <p style="text-align: center; max-width: 800px; font-size: 24px;">Wir freuen uns darauf, dich bald bei uns begrüßen zu dürfen. Frische Zutaten, Premium Qualität & echter Geschmack.</p>
+            
+            <div class="footer-grid">
+                <div class="footer-card">
+                    <span>Adresse</span>
+                    <span>Musterstraße 123<br>12345 Musterstadt</span>
+                </div>
+                <div class="footer-card">
+                    <span>Kontakt</span>
+                    <span>+49 123 456789<br>info@the3b.de</span>
+                </div>
+                <div class="footer-card">
+                    <span>Öffnungszeiten</span>
+                    <span>Mo-Sa: 11:00 - 22:00<br>So: Geschlossen</span>
+                </div>
+            </div>
+        </div>
 
         <!-- Navigation Dots -->
-        <div id="nav-dots" class="absolute bottom-4 md:bottom-6 w-full flex justify-center gap-1.5 md:gap-2 z-50 px-4 flex-wrap"></div>
+        <div id="nav-dots"></div>
     </main>
 
+    <!-- OVERVIEW MODAL (Pure CSS Fix für alte Browser) -->
+    <div id="modal-overview" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <h2>Entdecke unsere Auswahl</h2>
+                    <span class="subtitle" style="margin-top: 10px;">14 Premium Kreationen</span>
+                </div>
+                <button onclick="closeModal('modal-overview')" class="close-btn">✕</button>
+            </div>
+            <div id="overview-grid" class="overview-grid">
+                <!-- Befüllung durch JS -->
+            </div>
+        </div>
+    </div>
+
     <script>
-        const particleContainer = document.getElementById('particles-container');
-        for (let i = 0; i < 20; i++) {
-            const p = document.createElement('div');
+        // --- PARTIKEL SYSTEM INIT ---
+        var particleContainer = document.getElementById('particles-container');
+        for (var i = 0; i < 20; i++) {
+            var p = document.createElement('div');
             p.className = 'particle';
-            p.style.width = Math.random() * 4 + 2 + 'px';
-            p.style.height = p.style.width;
-            p.style.left = Math.random() * 100 + 'vw';
+            var size = Math.random() * 6 + 3 + 'px';
+            p.style.width = size;
+            p.style.height = size;
+            p.style.left = Math.random() * 1920 + 'px';
             p.style.animationDuration = Math.random() * 10 + 10 + 's';
             p.style.animationDelay = Math.random() * 5 + 's';
             particleContainer.appendChild(p);
         }
 
-        const products = [
+        // --- PRODUKTE ---
+        var products = [
             { nr: "1", cat: "BURGER", name: "Iconic Smash Burger", desc: "2 x Rindfleischpatty, Cheddar Käse, Karamellisierte Zwiebeln, Homemade Soße", priceS: "8,90 €", priceM: "13,90 €", img: "images/Nr.1.JPG", fb: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd" },
             { nr: "2", cat: "BURGER", name: "Super Spicy Burger", desc: "2 x Rindfleischpatty, Cheddar Käse, Karamellisierte Zwiebeln, Jalapeños, Scharfe Homemade Soße", priceS: "9,50 €", priceM: "14,50 €", img: "images/Nr.2.JPG", fb: "https://images.unsplash.com/photo-1586816001966-79b736744398" },
             { nr: "3", cat: "BURGER", name: "Chicken Paradies Burger", desc: "Gegrilltes Hähnchenfleisch, Karamellisierte Zwiebeln, Homemade Soße", priceS: "8,50 €", priceM: "13,50 €", img: "images/Nr.3.JPG", fb: "https://images.unsplash.com/photo-1615719413546-198b25453f85" },
@@ -291,14 +447,18 @@
             { isFooter: true, cat: "THE 3B" }
         ];
 
-        const totalItems = products.length;
-        let currentIndex = 0;
-        let isAnimating = false;
+        var totalItems = products.length;
+        var currentIndex = 0;
+        var isAnimating = false;
+        var autoScrollTimer;
+        var TIME_PER_SLIDE = 8000;
 
-        let autoScrollTimer;
-        const TIME_PER_SLIDE = 8000;
+        // Hilfsfunktion, die auch auf sehr alten Browsern funktioniert (ersetzt padStart)
+        function formatNumber(num) {
+            return num < 10 ? '0' + num : num;
+        }
 
-        const els = {
+        var els = {
             bgCat: document.getElementById('bg-category'),
             prodView: document.getElementById('product-view'),
             footerView: document.getElementById('footer-view'),
@@ -315,10 +475,53 @@
             counter: document.getElementById('product-counter')
         };
 
-        const dotContainer = document.getElementById('nav-dots');
-        for(let i=0; i<totalItems; i++) {
-            const dot = document.createElement('button');
-            dot.className = `nav-dot h-1.5 md:h-2 rounded-full ${i === 0 ? 'active' : 'w-3 md:w-5 bg-white/30 hover:bg-brand-gold/70'}`;
+        // --- GRID ÜBERSICHT GENERIEREN ---
+        function initOverviewGrid() {
+            var gridContainer = document.getElementById('overview-grid');
+            var htmlString = "";
+            for (var i = 0; i < products.length; i++) {
+                var p = products[i];
+                if(p.isFooter) continue; 
+                htmlString += '<div class="overview-card" onclick="jumpToProduct(' + i + ')">' +
+                    '<div class="overview-img-box">' +
+                        '<img src="' + p.img + '" onerror="this.src=\'' + p.fb + '?auto=format&fit=crop&w=300&q=80\'">' +
+                        '<div class="overview-nr">' + p.nr + '</div>' +
+                    '</div>' +
+                    '<span class="overview-cat">' + p.cat + '</span>' +
+                    '<span class="overview-title">' + p.name + '</span>' +
+                '</div>';
+            }
+            gridContainer.innerHTML = htmlString;
+        }
+        initOverviewGrid();
+
+        // --- MODAL FUNKTIONEN FÜR TIZEN ---
+        function openModal(id) {
+            document.getElementById(id).style.display = 'flex';
+        }
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        // --- DIREKT-SPRUNG ---
+        function jumpToProduct(targetIndex) {
+            closeModal('modal-overview');
+            resetAutoScroll();
+            setTimeout(function() { changeProduct(targetIndex); }, 100);
+        }
+
+        // --- NAV DOTS GENERIEREN ---
+        var dotContainer = document.getElementById('nav-dots');
+        for(var i=0; i<totalItems; i++) {
+            var dot = document.createElement('button');
+            dot.className = 'nav-dot';
+            if(i === 0) dot.className += ' active';
+            (function(index) {
+                dot.onclick = function() {
+                    resetAutoScroll();
+                    changeProduct(index);
+                };
+            })(i);
             dotContainer.appendChild(dot);
         }
 
@@ -327,28 +530,30 @@
         
         gsap.from([els.bgCat], { y: 50, opacity: 0, duration: 1, ease: "power3.out" });
         gsap.from('#prod-img-wrapper', { scale: 2.6, rotationY: 45, opacity: 0, duration: 1.2, ease: "expo.out", delay: 0.2 });
-        gsap.from(['#ui-left > *:not(h2)', '#ui-right'], { y: 30, opacity: 0, duration: 0.8, ease: "power2.out", delay: 0.4 });
+        gsap.from(['#ui-left', '#ui-right'], { y: 30, opacity: 0, duration: 0.8, ease: "power2.out", delay: 0.4 });
 
         function updateDOM(index) {
-            const p = products[index];
+            var p = products[index];
             els.bgCat.innerText = p.cat;
-            els.counter.innerText = `${(index + 1).toString().padStart(2, '0')} / ${totalItems}`;
+            els.counter.innerText = formatNumber(index + 1) + ' / ' + totalItems;
 
             if (p.isFooter) {
-                els.prodView.classList.add('hidden');
-                els.footerView.classList.remove('hidden');
-                els.footerView.classList.add('flex');
+                els.prodView.style.display = 'none';
+                els.footerView.style.display = 'flex';
             } else {
-                els.prodView.classList.remove('hidden');
-                els.footerView.classList.add('hidden');
-                els.footerView.classList.remove('flex');
+                els.prodView.style.display = 'flex';
+                els.footerView.style.display = 'none';
 
                 els.catLabel.innerText = p.cat;
                 els.desc.innerText = p.desc;
                 els.nr.innerText = p.nr;
                 
-                const words = p.name.split(' ').map(w => `<span class="inline-block translate-y-full opacity-0 title-word">${w}</span>`).join(' ');
-                els.title.innerHTML = `<span class="overflow-hidden block pb-2">${words}</span>`;
+                var words = p.name.split(' ');
+                var titleHtml = "";
+                for(var w = 0; w < words.length; w++) {
+                    titleHtml += '<span class="title-word">' + words[w] + '</span> ';
+                }
+                els.title.innerHTML = titleHtml;
                 
                 if(p.priceM) {
                     els.priceSingleLabel.innerText = "SINGLE";
@@ -364,18 +569,12 @@
                 }
 
                 els.img.src = p.img;
-                els.img.onerror = () => { els.img.src = `${p.fb}?auto=format&fit=crop&w=800&q=80`; };
+                els.img.onerror = function() { this.src = p.fb + '?auto=format&fit=crop&w=800&q=80'; };
             }
             
-            const dots = dotContainer.children;
-            for(let i=0; i<dots.length; i++) {
-                if(i === index) {
-                    dots[i].classList.add('active');
-                    dots[i].classList.remove('w-3', 'md:w-5', 'bg-white/30');
-                } else {
-                    dots[i].classList.remove('active');
-                    dots[i].classList.add('w-3', 'md:w-5', 'bg-white/30');
-                }
+            var dots = dotContainer.children;
+            for(var d = 0; d < dots.length; d++) {
+                dots[d].className = (d === index) ? 'nav-dot active' : 'nav-dot';
             }
         }
 
@@ -386,58 +585,63 @@
             if (nextIndex < 0) nextIndex = totalItems - 1;
             
             isAnimating = true;
-            let dir = nextIndex > currentIndex ? 1 : -1;
+            var dir = nextIndex > currentIndex ? 1 : -1;
             if (currentIndex === totalItems - 1 && nextIndex === 0) dir = 1;
             if (currentIndex === 0 && nextIndex === totalItems - 1) dir = -1;
 
-            const isNextFooter = products[nextIndex].isFooter;
-            const tlOut = gsap.timeline();
+            var isNextFooter = products[nextIndex].isFooter;
+            var tlOut = gsap.timeline();
 
             if (!products[currentIndex].isFooter) {
-                tlOut.to(['#ui-left > *:not(h2)', '#ui-right'], { y: -30 * dir, opacity: 0, duration: 0.3, ease: "power2.in" }, 0);
-                tlOut.to('.title-word', { y: -20 * dir, opacity: 0, duration: 0.2, stagger: 0.02, ease: "power2.in" }, 0);
+                tlOut.to(['#ui-left', '#ui-right'], { y: -30 * dir, opacity: 0, duration: 0.3, ease: "power2.in" }, 0);
                 tlOut.to('#prod-img-wrapper', { scale: 0.6, rotationX: 10 * dir, opacity: 0, duration: 0.3, ease: "power2.in" }, 0);
             } else {
                 tlOut.to(els.footerView, { y: -30 * dir, opacity: 0, duration: 0.3, ease: "power2.in" }, 0);
             }
 
             tlOut.to(els.bgCat, { y: -50 * dir, opacity: 0, scale: 0.9, duration: 0.3, ease: "power2.in" }, 0);
-            tlOut.to('.bg-grid', { backgroundPosition: `50% ${dir * 150}px`, duration: 0.3, ease: "power1.in" }, 0);
             tlOut.to('.bg-orb', { scale: 1.2, opacity: 0.8, duration: 0.3 }, 0);
 
-            setTimeout(() => {
+            setTimeout(function() {
                 updateDOM(nextIndex);
                 currentIndex = nextIndex;
-                const tlIn = gsap.timeline();
+                var tlIn = gsap.timeline();
 
                 if (!isNextFooter) {
-                    gsap.set(['#ui-left > *:not(h2)', '#ui-right'], { y: 30 * dir, opacity: 0 });
+                    gsap.set(['#ui-left', '#ui-right'], { y: 30 * dir, opacity: 0 });
                     gsap.set('#prod-img-wrapper', { scale: 2.6, rotationY: 25 * dir, rotationX: 15 * dir, opacity: 0 });
                     
-                    tlIn.to(['#ui-left > *:not(h2)', '#ui-right'], { y: 0, opacity: 1, duration: 0.6, ease: "power3.out", stagger: 0.1 }, 0.1);
-                    tlIn.to('.title-word', { y: 0, opacity: 1, duration: 0.6, stagger: 0.05, ease: "back.out(1.5)" }, 0.2); 
+                    tlIn.to(['#ui-left', '#ui-right'], { y: 0, opacity: 1, duration: 0.6, ease: "power3.out", stagger: 0.1 }, 0.1);
                     tlIn.to('#prod-img-wrapper', { scale: 1, rotationY: 0, rotationX: 0, opacity: 1, duration: 0.8, ease: "expo.out" }, 0);
+                    
+                    gsap.fromTo('.title-word', {y: 30, opacity: 0}, {y: 0, opacity: 1, duration: 0.6, stagger: 0.05, ease: "back.out(1.5)"});
                 } else {
                     gsap.set(els.footerView, { y: 30 * dir, opacity: 0 });
                     tlIn.to(els.footerView, { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" }, 0.1);
                 }
 
                 gsap.set(els.bgCat, { y: 50 * dir, opacity: 0, scale: 1.1 });
-                gsap.set('.bg-grid', { backgroundPosition: `50% ${-dir * 150}px` });
 
                 tlIn.to(els.bgCat, { y: 0, opacity: 1, scale: 1, duration: 0.7, ease: "power3.out" }, 0);
-                tlIn.to('.bg-grid', { backgroundPosition: `0% 0%`, duration: 0.8, ease: "power3.out" }, 0);
                 tlIn.to('.bg-orb', { scale: 1, opacity: 0.6, duration: 0.8, ease: "power3.out" }, 0);
 
-                setTimeout(() => { isAnimating = false; }, 600); 
+                setTimeout(function() { isAnimating = false; }, 600); 
             }, 300);
         }
 
         function startAutoScroll() {
             clearInterval(autoScrollTimer);
-            autoScrollTimer = setInterval(() => {
-                changeProduct(currentIndex + 1);
+            autoScrollTimer = setInterval(function() {
+                // Check if Modal is open
+                if (document.getElementById('modal-overview').style.display !== 'flex') {
+                    changeProduct(currentIndex + 1);
+                }
             }, TIME_PER_SLIDE);
+        }
+
+        function resetAutoScroll() {
+            clearInterval(autoScrollTimer);
+            startAutoScroll();
         }
 
     </script>
